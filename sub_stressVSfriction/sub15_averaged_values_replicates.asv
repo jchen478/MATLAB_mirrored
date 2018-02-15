@@ -132,7 +132,7 @@ for k=1:nTheta
         end
        average_range = replicate_flag(j) + 1; 
         std_sigmapstar = std(sigmapstar(:,1:average_range),0,2);
-        sigmapstar(:,1) = mean(sigmapstar(:,1:average_range),2);
+        sigmapstar(:,1) = mean(sigmapstar(:,1:replicate_flag(j)),2);
         
         
         % calculate relevant parameters
