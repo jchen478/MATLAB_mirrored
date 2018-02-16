@@ -96,6 +96,10 @@ Eelas = zeros(nMu,nNfib,nTheta);
 std_Eelas = zeros(nMu,nNfib,nTheta);
 
 sigmapstar = zeros(nMu,nReplicate); 
+N1star = zeros(nMu,nReplicate); 
+N2star = zeros(nMu,nReplicate); 
+nc = zeros(nMu,nReplicate); 
+elas = zeros(nMu,nReplicate); 
 
 % read in averaged
 for k=1:nTheta
@@ -113,10 +117,10 @@ for k=1:nTheta
         kb = data(:,4);
         side = data(:,6);
         sigmapstar(:,1) = data(:,7);
-        N1star = data(:,8);
-        N2star = data(:,9);
-        nc = data(:,10);
-        elas = data(:,27);
+        N1star(:,1) = data(:,8);
+        N2star(:,1) = data(:,9);
+        nc(:,1) = data(:,10);
+        elas(:,1) = data(:,27);
         
         for r=1:nReplicate
             replicate_name = ['../data_stressVSfriction/averagedValues_replicate',num2str(r),'/',fileNameArr{k},'_nfib',num2str(nfibArr(j)),'.txt'];
@@ -125,21 +129,38 @@ for k=1:nTheta
                 replicate_flag(j) = r;
                 File = fopen(replicate_name,'r');
                 data = fscanf(File,'%f',[28 Inf])';
-                fclose(File);                
+                fclose(File);
                 sigmapstar(:,r+1) = data(:,7);
-                
+                N1star(:,r+1) = data(:,8);
+                N2star(:,r+1) = data(:,9);
+                nc(:,r+1) = data(:,10);
+                elas(:,r+1) = data(:,27);
             end
         end
-       average_range = replicate_flag(j) + 1; 
+        
+        % average
+        average_range = replicate_flag(j) + 1;
+        
         std_sigmapstar = std(sigmapstar(:,1:average_range),0,2);
         sigmapstar(:,1) = mean(sigmapstar(:,1:average_range),2);
         
+        std_N1star = std(N1star(:,1:average_range),0,2);
+        N1star(:,1) = mean(N1star(:,1:average_range),2);
+        
+        std_N2star = std(N2star(:,1:average_range),0,2);
+        N2star(:,1) = mean(N2star(:,1:average_range),2);
+        
+        std_nc = std(nc(:,1:average_range),0,2);
+        nc(:,1) = mean(nc(:,1:average_range),2);
+        
+        std_elas = std(elas(:,1:average_range),0,2);
+        elas(:,1) = mean(elas(:,1:average_range),2);
         
         % calculate relevant parameters
         [Seff,rp,nL3,L,gamma] = pCalc(nfib, nseg, rps, kb, side, a, EY, Imom, eta0);
         
         % Dimensionalize stresses
-        [sigmap,sigma, std_sigmap, se_sigma, N1, N2] = stressDim(sigmapstar(:,1), std_sigmapstar, N1star, N2star, nseg, rps, eta0, gamma, nL3);
+        [sigmap,sigma, std_sigmap, se_sigma, N1, N2] = stressDim(sigmapstar(:,1), std_sigmapstar, N1star(:,1), N2star(:,1), nseg, rps, eta0, gamma, nL3);
         
         % Calculate viscosity
         etarel = sigma./gamma;
@@ -149,8 +170,8 @@ for k=1:nTheta
         relative_viscosity(:,j,k) = etarel;
         norm1(:,j,k) = N1;
         norm2(:,j,k) = N2;
-        number_of_contacts(:,j,k) = nc;
-        Eelas(:,j,k) = elas;
+        number_of_contacts(:,j,k) = nc(:,1);
+        Eelas(:,j,k) = elas(:,1);
         
       
         
