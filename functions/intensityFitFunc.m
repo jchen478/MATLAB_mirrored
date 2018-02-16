@@ -1,6 +1,6 @@
-function [intensityDesired] = intensityFitFunc(theta,nfib,dbinDesired,side,nMu,figInd)
+function [intensityDesired] = intensityFitFunc(theta,dataPath,nfib,dbinDesired,side,nMu)
 
-dataPath = '../data_stressVSfriction/intensityBin/';
+% dataPath = '../data_stressVSfriction/intensityBin/';
 
 baseFile=[dataPath,theta,'_nfib',num2str(nfib),'_baseI.txt'];
 File = fopen(baseFile,'r');
@@ -8,15 +8,11 @@ data = fscanf(File,'%f',[2 Inf])';
 fclose(File);
 binArr = data(:,1);
 baseArr = data(:,2);
-
 dbin = side./binArr;
-
 nCase = length(binArr);
 IntensityBin = zeros(nMu,nCase);
 intensityDesired = zeros(nMu,1);
-
 binArrLegend = cell(nCase,1);
-
 
 % read files
 for i=1:nCase
@@ -25,21 +21,8 @@ for i=1:nCase
     File = fopen(name,'r');
     data = fscanf(File,'%f',[2 Inf])';
     fclose(File);
-%     data
     IntensityBin(:,i) = data(:,2);
-%     figure(figInd)
-%     hold on
-%     plot(data(:,1), (data(:,2)), '-o');
 end
-
-% 
-% figure(figInd)
-% hold on
-% xlabel('$\mu$')
-% ylabel('$I$')
-% legend(binArrLegend,'location','bestoutside')
-% xlim([0 25])
-
 
 %% find regression line
 fit = zeros(nMu,2);

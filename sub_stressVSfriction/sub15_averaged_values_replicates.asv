@@ -90,12 +90,19 @@ std_particle_stress = zeros(nMu,nNfib,nTheta);
 relative_viscosity = zeros(nMu,nNfib,nTheta);
 std_relative_viscosity = zeros(nMu,nNfib,nTheta);
 norm1 = zeros(nMu,nNfib,nTheta);
+std_norm1 = zeros(nMu,nNfib,nTheta);
 norm2 = zeros(nMu,nNfib,nTheta);
+std_norm2 = zeros(nMu,nNfib,nTheta);
 number_of_contacts = zeros(nMu,nNfib,nTheta);
+std_number_of_contacts = zeros(nMu,nNfib,nTheta);
 Eelas = zeros(nMu,nNfib,nTheta);
 std_Eelas = zeros(nMu,nNfib,nTheta);
 
 sigmapstar = zeros(nMu,nReplicate); 
+N1star = zeros(nMu,nReplicate); 
+N2star = zeros(nMu,nReplicate); 
+nc = zeros(nMu,nReplicate); 
+elas = zeros(nMu,nReplicate); 
 
 % read in averaged
 for k=1:nTheta
@@ -113,10 +120,10 @@ for k=1:nTheta
         kb = data(:,4);
         side = data(:,6);
         sigmapstar(:,1) = data(:,7);
-        N1star = data(:,8);
-        N2star = data(:,9);
-        nc = data(:,10);
-        elas = data(:,27);
+        N1star(:,1) = data(:,8);
+        N2star(:,1) = data(:,9);
+        nc(:,1) = data(:,10);
+        elas(:,1) = data(:,27);
         
         for r=1:nReplicate
             replicate_name = ['../data_stressVSfriction/averagedValues_replicate',num2str(r),'/',fileNameArr{k},'_nfib',num2str(nfibArr(j)),'.txt'];
@@ -125,33 +132,56 @@ for k=1:nTheta
                 replicate_flag(j) = r;
                 File = fopen(replicate_name,'r');
                 data = fscanf(File,'%f',[28 Inf])';
-                fclose(File);                
+                fclose(File);
                 sigmapstar(:,r+1) = data(:,7);
-                
+                N1star(:,r+1) = data(:,8);
+                N2star(:,r+1) = data(:,9);
+                nc(:,r+1) = data(:,10);
+                elas(:,r+1) = data(:,27);
             end
         end
-       average_range = replicate_flag(j) + 1; 
-        std_sigmapstar = std(sigmapstar(:,1:average_range),0,2);
-        sigmapstar(:,1) = mean(sigmapstar(:,1:replicate_flag(j)),2);
         
+        % average
+        average_range = replicate_flag(j) + 1;
+        
+        std_sigmapstar = std(sigmapstar(:,1:average_range),0,2);
+        sigmapstar(:,1) = mean(sigmapstar(:,1:average_range),2);
+        
+        std_N1star = std(N1star(:,1:average_range),0,2);
+        N1star(:,1) = mean(N1star(:,1:average_range),2);
+        
+        std_N2star = std(N2star(:,1:average_range),0,2);
+        N2star(:,1) = mean(N2star(:,1:average_range),2);
+        
+        std_nc = std(nc(:,1:average_range),0,2);
+        nc(:,1) = mean(nc(:,1:average_range),2);
+        
+        std_elas = std(elas(:,1:average_range),0,2);
+        elas(:,1) = mean(elas(:,1:average_range),2);
         
         % calculate relevant parameters
         [Seff,rp,nL3,L,gamma] = pCalc(nfib, nseg, rps, kb, side, a, EY, Imom, eta0);
         
         % Dimensionalize stresses
-        [sigmap,sigma, std_sigmap, se_sigma, N1, N2] = stressDim(sigmapstar(:,1), std_sigmapstar, N1star, N2star, nseg, rps, eta0, gamma, nL3);
+        [sigmap,sigma, std_sigmap, std_sigma, N1, N2] = stressDim(sigmapstar(:,1), std_sigmapstar, N1star(:,1), N2star(:,1), nseg, rps, eta0, gamma, nL3);
+        [dum, dum1, dum2, dum3, std_N1, std_N2] = stressDim(sigmapstar(:,1), std_sigmapstar, std_N1star, std_N2star, nseg, rps, eta0, gamma, nL3);
         
         % Calculate viscosity
         etarel = sigma./gamma;
+        std_etarel = std_sigma./gamma; 
         
         particle_stress(:,j,k) = sigmap;
         std_particle_stress(:,j,k) = std_sigmap;
         relative_viscosity(:,j,k) = etarel;
+        std_relative_viscosity(:,j,k) = std_etarel;
         norm1(:,j,k) = N1;
+        std_norm1(:,j,k) = std_N1;
         norm2(:,j,k) = N2;
-        number_of_contacts(:,j,k) = nc;
-        Eelas(:,j,k) = elas;
-        
+        std_norm2(:,j,k) = std_N2;
+        number_of_contacts(:,j,k) = nc(:,1);
+        std_number_of_contacts(:,j,k) = std_nc;
+        Eelas(:,j,k) = elas(:,1);
+        std_Eelas(:,j,k) = std_elas;
       
         
     end
@@ -159,10 +189,28 @@ end
 
 % Find intensity through fit function
 intensity = zeros(nMu,nNfib,nTheta);
+std_intensity = zeros(nMu,nNfib,nTheta);
 dbin = 20;
+I = zeros(nMu,nReplicate); 
 for k=1:nTheta
     for j=1:nNfib
-        intensity(:,j,k) = intensityFitFunc(fileNameArr{k},nfibArr(j), dbin, lboxArr(j), nMu, j+nNfib*(k-1));
+        intensityDataPath = '../data_stressVSfriction/intensityBin/';
+        I(:,1) = intensityFitFunc(fileNameArr{k},...
+            intensityDataPath, nfibArr(j), dbin, lboxArr(j), nMu);
+        for r=1:replicate_flag(j)
+            intensityDataPath = ['../data_stressVSfriction/intensityBin_replicate',num2str(r),'/'];            
+            I(:,1+r) = intensityFitFunc(fileNameArr{k},...
+                intensityDataPath, nfibArr(j), dbin, lboxArr(j), nMu);            
+        end
+        
+        % average
+        average_range = replicate_flag(j) + 1;
+        
+        std_I = std(I(:,1:average_range),0,2);
+        I(:,1) = mean(I(:,1:average_range),2);
+        
+        intensity(:,j,k) = I(:,1);
+        std_intensity(:,j,k) = std_I;
     end
 end
 %}
@@ -190,8 +238,15 @@ title(['Intensity $d_{bin} = $',num2str(dbin)])
 ylabel('$I$')
 hold on
 for k=1:nTheta
-    for j=1:nNfib
-        plot(muArr,intensity(:,j,k),'-.o','MarkerSize',10,'Linewidth',2.5);
+    for j=1:nNfib        
+         if replicate_flag(j) == 0
+             plot(muArr,intensity(:,j,k),...
+                 '-.x','MarkerSize',10,'Linewidth',2.5')
+        else
+            errorbar(muArr,intensity(:,j,k),...
+            std_intensity(:,j,k)/2,...
+            '-.o','MarkerSize',10,'linewidth',2.5);
+        end    
     end
 end
 
@@ -204,13 +259,12 @@ for k=1:nTheta
     for j=1:nNfib
         if replicate_flag(j) == 0
              plot(muArr,particle_stress(:,j,k).*L.^4/EY/Imom,...
-                 '-.x','MarkerSize',15,'Linewidth',2.5')
+                '-.x','MarkerSize',10,'Linewidth',2.5')
         else
             errorbar(muArr,particle_stress(:,j,k).*L.^4/EY/Imom,...
             std_particle_stress(:,j,k).*L.^4/EY/Imom/2,...
-            '-.o','MarkerSize',10, 'linewidth',2.5);
-        end
-        
+            '-.o','MarkerSize',10,'linewidth',2.5);
+        end        
     end
 end
 
@@ -220,8 +274,15 @@ dataFile{3} = [dataFile{3},'norm1_vs_mu'];
 ylabel('$N_1 L^4/ E_Y I$')
 hold on
 for k=1:nTheta
-    for j=1:nNfib
-        plot(muArr,norm1(:,j,k).*L.^4/EY/Imom,'-.o','MarkerSize',10,'Linewidth',2.5);
+    for j=1:nNfib       
+         if replicate_flag(j) == 0
+            plot(muArr,norm1(:,j,k).*L.^4/EY/Imom,...
+                '-.x','MarkerSize',10,'Linewidth',2.5')
+        else
+            errorbar(muArr,norm1(:,j,k).*L.^4/EY/Imom,...
+            std_norm1(:,j,k).*L.^4/EY/Imom/2,...
+            '-.o','MarkerSize',10, 'linewidth',2.5);
+        end        
     end
 end
 
@@ -232,7 +293,14 @@ ylabel('$N_2 L^4/ E_Y I$')
 hold on
 for k=1:nTheta
     for j=1:nNfib
-        plot(muArr,norm2(:,j,k).*L.^4/EY/Imom,'-.o','MarkerSize',10,'Linewidth',2.5);
+        if replicate_flag(j) == 0
+            plot(muArr,norm2(:,j,k).*L.^4/EY/Imom,...
+             '-.x','MarkerSize',10,'Linewidth',2.5')
+        else
+            errorbar(muArr,norm2(:,j,k).*L.^4/EY/Imom,...
+                std_norm2(:,j,k).*L.^4/EY/Imom/2,...
+                '-.o','MarkerSize',10, 'linewidth',2.5);
+        end
     end
 end
 
@@ -243,8 +311,14 @@ ylabel('$\eta_{rel}$')
 hold on
 for k=1:nTheta
     for j=1:nNfib
-        errorbar(muArr,relative_viscosity(:,j,k),std_relative_viscosity(:,j,k)/2,...
-            '-.o','MarkerSize',10, 'linewidth',2.5);
+        if replicate_flag(j) == 0
+            plot(muArr,relative_viscosity(:,j,k),...
+               '-.x','MarkerSize',10,'Linewidth',2.5')
+        else
+            errorbar(muArr,relative_viscosity(:,j,k),...
+                std_relative_viscosity(:,j,k)/2,...
+                '-.o','MarkerSize',10, 'linewidth',2.5);
+        end
     end
 end
 
@@ -255,8 +329,14 @@ ylabel('$N_c$')
 hold on
 for k=1:nTheta
     for j=1:nNfib
-        plot(muArr,number_of_contacts(:,j,k),...
-            '-.o','MarkerSize',10, 'linewidth',2.5);
+        if replicate_flag(j) == 0
+            plot(muArr,number_of_contacts(:,j,k),...
+                '-.x','MarkerSize',15,'Linewidth',2.5')
+        else
+            errorbar(muArr,number_of_contacts(:,j,k),...
+                std_number_of_contacts(:,j,k)/2,...
+                '-.o','MarkerSize',10, 'linewidth',2.5);
+        end
     end
 end
 
@@ -266,9 +346,14 @@ title('Elastic energy stored per fiber')
 ylabel('$<E_{elastic}>/ 8\pi\eta_0\dot{\gamma}l^3$')
 hold on
 for k=1:nTheta
-    for j=1:nNfib
-        errorbar(muArr,Eelas(:,j,k),std_Eelas(:,j,k)/2,...
+    for j=1:nNfib        
+        if replicate_flag(j) == 0
+             plot(muArr,Eelas(:,j,k),...
+                 '-.x','MarkerSize',15,'Linewidth',2.5')
+        else
+             errorbar(muArr,Eelas(:,j,k),std_Eelas(:,j,k)/2,...
             '-.o','MarkerSize',10, 'linewidth',2.5);
+        end
     end
 end
 
