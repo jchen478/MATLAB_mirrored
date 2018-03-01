@@ -97,11 +97,11 @@ std_number_of_contacts = zeros(nMu,nNfib,nTheta);
 Eelas = zeros(nMu,nNfib,nTheta);
 std_Eelas = zeros(nMu,nNfib,nTheta);
 
-sigmapstar = zeros(nMu,nReplicate); 
-N1star = zeros(nMu,nReplicate); 
-N2star = zeros(nMu,nReplicate); 
-nc = zeros(nMu,nReplicate); 
-elas = zeros(nMu,nReplicate); 
+sigmapstar = zeros(nMu,nReplicate+1); 
+N1star = zeros(nMu,nReplicate+1); 
+N2star = zeros(nMu,nReplicate+1); 
+nc = zeros(nMu,nReplicate+1); 
+elas = zeros(nMu,nReplicate+1); 
 
 % read in averaged
 for k=1:nTheta

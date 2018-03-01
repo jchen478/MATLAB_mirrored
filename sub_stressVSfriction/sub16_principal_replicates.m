@@ -27,7 +27,7 @@ colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('MediumBlue') rgb('Plum') rgb('Purple') };
 %}
 %{
-%%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%%
 nfibArr = [160 240  320 640 1280 3200 6400];
 lboxArr = [300 343.4 378 476.2 600 814.3  1026];
 muArr = [0 1 2 3 4 5 10 15 20];
@@ -64,6 +64,11 @@ else
         end
     end
 end
+
+% replicate info
+nReplicate = 2;
+replicate_flag = zeros(nNfib,1);
+
 figStart = 1;
 
 dataFile = cell(2,1);
@@ -75,49 +80,32 @@ for ii=1:2
 end
 dataFile{1} = [ dataFile{1},'principal_direction3'];
 
+% sampling info
+sample_strain = 1000:25:1500;
+nSample = length(sample_strain); 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Plot principal directions vs. strain
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dataPath = '../data_stressVSfriction/ClusterP/';
-N = zeros(nMu, nNfib); % number of flocs meeting criteria
+
 Np_avg = zeros(nMu, nNfib);
 Np_std = zeros(nMu, nNfib);
 
 for j=1:nNfib
-    figure('units','normalized','outerposition',[0.2 0.2 0.25 0.4])
-    hold on
-    title([fileNameArr{1}, ' ', num2str(nfibArr(j))]);
+    
+    N = zeros(nMu, nReplicate+1); 
+    
     for i=1:nMu
-        
         name = [dataPath,fileNameArr{1},'_clusterp_nfib',num2str(nfibArr(j)),'_',num2str(muArr(i)),'.txt'];
         File=fopen(name,'r');
         data = fscanf(File,'%f',[35 Inf])';
         fclose(File);
         
-        % condition for elimination
-        % 1. Percolation
-        %%{
+        % eliminate non-percolating structures
         sidexo = data(:,5);
         mle3 = data(:,35);
         keep = (mle3 >= sqrt(3)*sidexo);
-        %}
-        % 2. Number of fibers in cluster
-        %{
-        nC = data(:,10);
-        keep = (nC >= 10);
-        %}
-        % 3. Normalized number of fibers in cluster
-        %{
-        nfib = data(:,1);
-        nC = data(:,10);
-        keep = (nC >= 0.01*nfib);
-        %}
-        % 4. Radius of gyration
-        %{
-        Rg = data(:,32);
-        sidexo = data(:,5);
-        keep = (Rg >= 0.6*sidexo);
-        %}
         
         % delete empty rows
         data = data.*keep;
@@ -160,111 +148,90 @@ for j=1:nNfib
         mle2 = data(:,34);
         mle3 = data(:,35);
         
-        % calculate invariants of gyration tensor
-        I1 = (lam1+lam2+lam3)./lam3; 
-        I2 = (lam1.*lam2+lam2.*lam3+lam1.*lam3)./(lam3.^2);
-        I3 = (lam1.*lam2.*lam3)./lam3.^3; 
-        
-        N(i,j) = length(lam1); 
-        
-        allstrain = 1000:25:1500; 
-        allN = zeros(length(allstrain),1); 
-        for ii=1:length(allstrain)
-            tstrain = allstrain(ii); 
-            allN(ii) = sum(strain == tstrain); 
+        % obtain number of percolating structures
+        allN = zeros(nSample,1);
+        for ii=1:nSample
+            tstrain = sample_strain(ii);
+            allN(ii) = sum(strain == tstrain);
         end
-        Np_avg(i,j) = mean(allN); 
-        Np_std(i,j) = std(allN); 
+        N(i,1) = mean(allN); 
         
-        % different plots
-        % 1. Third principal axis
-        %{
-        scatter3(abs(x3),abs(y3),abs(z3),'filled')
-        box on
-        xlabel('$\nu_{3,x}$ (flow)')
-        ylabel('$\nu_{3,y}$ (vorticity)')
-        zlabel('$\nu_{3,z}$ (gradient)')
-        %}
-        % 2. mle3 * Third principal axis
-        %{       
-        scatter3(mle3.*abs(x3),mle3.*abs(y3),mle3.*abs(z3),'filled')
-        box on
-        xlabel('$\nu_{3,x}MLE_3$ (flow)')
-        ylabel('$\nu_{3,y}MLE_3$ (vorticity)')
-        zlabel('$\nu_{3,z}MLE_3$ (gradient)')
-        %}
-        % 3. mle3
-        %{
-        scatter(mu,mle3,'filled')
-        xlabel('$\mu$')
-        ylabel('$MLE_3$')
-        %}
-        % 4. mle2
-        %{
-        scatter(mu,mle2,'filled')
-        xlabel('$\mu$')
-        ylabel('$MLE_2$')
-        %}
-        % 5. Rg
-        %{
-        scatter(mu,Rg,'filled')
-        xlabel('$\mu$')
-        ylabel('$R_g$')
-        %}
-        % 6. I1
-        %{
-        scatter(mu,I1,'filled')
-        xlabel('$\mu$')
-        ylabel('$I_1$')
-        %}
-        % 7. I2
-        %{
-        scatter(mu,I2,'filled')
-        xlabel('$\mu$')
-        ylabel('$I_2$')
-        %}
-        % 8. I3
-        %{
-        scatter(mu,I3,'filled')
-        xlabel('$\mu$')
-        ylabel('$I_3$')
-        %}
-        % 9. nc
-        %%{
-        scatter(mu,nC./nfib,'filled')
-        xlabel('$\mu$')
-        ylabel('$N_{fib}$ in cluster')
-        %}
+        for r=1:nReplicate
+            replicate_name = ['../data_stressVSfriction/ClusterP_replicate',...
+                num2str(r),'/',fileNameArr{1},'_clusterp_nfib',...
+                num2str(nfibArr(j)),'_',num2str(muArr(i)),'.txt'];
+
+            if exist(replicate_name, 'file') == 2
+                
+                % if replicates exist, open file ...
+                replicate_flag(j) = r;
+                File=fopen(replicate_name,'r');
+                data = fscanf(File,'%f',[35 Inf])';
+                fclose(File);             
+                
+                % eliminate non-percolating structures ...
+                sidexo = data(:,5);
+                mle3 = data(:,35);
+                keep = (mle3 >= sqrt(3)*sidexo);
+                
+                % delete empty rows ...
+                data = data.*keep;
+                data( ~any(data,2),:) = [];
+                
+                % find strain info ...
+                strain = data(:,3);
+                
+                % obtain percolation results
+                allN = zeros(nSample,1);
+                for ii=1:nSample
+                    tstrain = sample_strain(ii);
+                    allN(ii) = sum(strain == tstrain);
+                end
+                N(i,1+r) = mean(allN);
+            end
+        end
+        
+        
     end
-    legend(muLegendArr,'location','bestoutside')
+    % average over replicates
+    average_range = replicate_flag(j) + 1; 
+    Np_avg(:,j) = mean(N(:,1:average_range),2);
+    Np_std(:,j) = std(N(:,1:average_range),0,2);
 end
 
-se_N = zeros(nMu,nNfib); 
+se_N = zeros(nMu,nNfib);
 figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
-% title('Number of percolating flocs')
+
 ylabel('$<N_p>$')
 hold on
 for j=1:nNfib
-%     plot(muArr,N(:,j),...
-%         '-.o','MarkerSize',10, 'linewidth',2.5);
-    errorbar(muArr,Np_avg(:,j),Np_std(:,j)/2,...
-        '-.o','MarkerSize',10, 'linewidth',2.5);
+    if replicate_flag(j) == 0
+        plot(muArr,Np_avg(:,j),...
+            '-.o','MarkerSize',10, 'linewidth',2.5);
+    else
+        errorbar(muArr,Np_avg(:,j),...
+            Np_std(:,j)/2,...
+            '-.o','MarkerSize',8, 'linewidth',2.5);
+    end
 end
 xlabel('$\mu$')
 xlim([0 inf])
-% ylim([-inf inf])
+
 legend(thetaNfibLegendArr,'location','bestoutside')
 
 figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
 ylabel('$<N_p> L/L_{box}$')
 hold on
 for j=1:nNfib
-%     plot(muArr,N(:,j)/lboxArr(j),...
-%         '-.o','MarkerSize',10, 'linewidth',2.5);
-    errorbar(muArr,Np_avg(:,j)/lboxArr(j)*2*rpFiber,Np_std(:,j)*2*rpFiber/2/lboxArr(j),...
-        '-.o','MarkerSize',10, 'linewidth',2.5);
+    if replicate_flag(j) == 0
+        plot(muArr,Np_avg(:,j)/lboxArr(j)*2*rpFiber,...
+            '-.o','MarkerSize',10, 'linewidth',2.5);
+    else
+        errorbar(muArr,Np_avg(:,j)/lboxArr(j)*2*rpFiber,...
+            Np_std(:,j)/2/lboxArr(j)*2*rpFiber,...
+            '-.o','MarkerSize',8, 'linewidth',2.5);
+    end
 end
 xlabel('$\mu$')
 xlim([0 inf])
-% ylim([-inf inf])
 legend(thetaNfibLegendArr,'location','bestoutside')
