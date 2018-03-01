@@ -7,24 +7,50 @@ close all
 %%% (later read from file)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%{
-nP = 2095*27;
-File = fopen('r_1280_20_1500_1.txt','r');
-data = fscanf(File,'%f',[5 nP])';
+nP = 540;
+File = fopen('rAscii_160_10_1500_extended.in','r');
+data = fscanf(File,'%f',[5 nP*27])';
 fclose(File);
 rx = data(:,3);
 ry = data(:,4);
 rz = data(:,5); 
+
 figure()
 hold on
-% box on
-scatter3(rx(1:2095),ry(1:2095),rz(1:2095),'filled','markerFaceColor',rgb('Crimson'))
-scatter3(rx(2096:end),ry(2096:end),rz(2096:end),'filled','markerFaceColor',rgb('MediumBlue'))
+scatter3(rx(1:nP),ry(1:nP),rz(1:nP),'filled','markerFaceColor',rgb('Crimson'))
 xlabel('x')
 ylabel('y')
 zlabel('z')
-%}
+side = 300;
+xlim([0 side])
+ylim([0 side])
+zlim([0 side])
 
-%%{
+figure()
+hold on
+% box on
+% scatter3(rx,ry,rz,'filled','markerFaceColor',rgb('Crimson'))
+scatter3(rx(1:nP),ry(1:nP),rz(1:nP),10,'filled','markerFaceColor',rgb('Crimson'))
+scatter3(rx(541:end),ry(541:end),rz(541:end),10,'filled','markerFaceColor',rgb('MediumBlue'))
+xlabel('x')
+ylabel('y')
+zlabel('z')
+% box on
+side = 300;
+xlim([0 3*side])
+ylim([0 3*side])
+zlim([0 3*side])
+% side = 300; 
+%}
+for i=1:2
+    h = figure(i); 
+    view(-37,24)
+    set(h,'Units','Inches');
+    pos = get(h,'Position');
+    set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+    print(h,['figure', num2str(i)],'-dpdf','-r0')
+end
+%{
 nP = 540*27;
 File = fopen('rAscii_extend.in','r');
 data = fscanf(File,'%f',[5 nP])';

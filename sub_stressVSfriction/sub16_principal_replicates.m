@@ -68,7 +68,7 @@ figStart = 1;
 
 dataFile = cell(2,1);
 for ii=1:2
-    dataFile{ii} = ['fig13_principal/',fileNameArr{1},'_nfib'];
+    dataFile{ii} = ['fig16_principal_replicates/',fileNameArr{1},'_nfib'];
     for j=1:nNfib
         dataFile{ii} = [ dataFile{ii},num2str(nfibArr(j)),'_'];
     end

@@ -11,7 +11,7 @@ close all;
 %%% Define common parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%{
+%{
 %%%%%%%%%%%%%%%%%%%%% U-shaped fibers %%%%%%%%%%%%%%%%%%%%%
 % fileNameArr = {'theta0'};
 % fileNameArr = {'theta1'};
@@ -27,17 +27,23 @@ colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('Olive') rgb('DarkGreen') rgb('LightSkyBlue') ...
     rgb('MediumBlue') rgb('Plum') rgb('Purple') };
 %}
-%{
+%%{
 %%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%%
 nfibArr = [160 240  320 640 1280 3200 6400];
 lboxArr = [300 343.4 378 476.2 600 814.3  1026];
 muArr = [0 1 2 3 4 5 10 15 20];
+
+nfibArr = [3200 ];
+lboxArr = [ 814.3 ];
+muArr = [10 ];
+
 thetaArr = [3];
 fileNameArr = {'helical'};
 rpFiber = 75;
 colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('Orange') rgb('Gold') rgb('Lime')...
     rgb('DarkGreen') rgb('LightSkyBlue') rgb('Plum')};
+colorArr = { rgb('DarkGreen') };
 %}
 
 % fiber dimensions
@@ -45,6 +51,9 @@ a = 1.60E-05;       % radius (m)
 Imom = pi*a^4/4;    % area moment (m^4)
 EY = 1e9;           % Young's modulus (Pa m^2)
 eta0 = 1;           % fluid viscosity (Pa s)
+nseg = 5;           % number of segments
+rps = 15; 
+kb = 10; 
 
 nTheta = length(thetaArr);
 nMu = length(muArr);
@@ -142,14 +151,26 @@ for j=1:nNfib
         data = fscanf(File,'%f',[7 Inf])';
         fclose(File);
         diff = data(2,1) - data(1,1);
+        nStep = length(data);
         % make sure that strain is increasing
-        for ii=2:length(data)
+        for ii=2:nStep
             if (data(ii,1) < data(ii-1,1))
                 data(ii,1) = data(ii-1,1) + diff;
             end
         end
-        %         M = movmean(data(:,4),100);
         
+        nfib = nfibArr(j)*ones(nStep,1); 
+        nsegArr = nseg*ones(nStep,1); 
+        side = lboxArr(j)*ones(nStep,1); 
+         % calculate relevant parameters
+        [Seff,rp,nL3,L,gamma] = pCalc(nfib, nsegArr, rps, kb, side, a, EY, Imom, eta0);
+        
+        % Dimensionalize stresses
+        [sigmap,sigma, std_sigmap, std_sigma, N1, N2] = ...
+            stressDim(data(:,4), zeros(nStep,1), zeros(nStep,1), ...
+            zeros(nStep,1), nseg, rps, eta0, gamma, nL3);
+        sigmap_nondim = sigmap.*L.^4/EY/Imom;
+        data(:,4) = sigmap_nondim; 
         %%{
         % block average
         block = 125;
@@ -166,16 +187,10 @@ for j=1:nNfib
             'MarkerFaceColor',colorArr{i},...
             'MarkerEdgeColor',colorArr{i})
         %}
-        
-        %{
-        % plot stress output with strain
-        scatter(data(:,1),M,markersize,...
-            'MarkerFaceColor',colorArr{i},...
-            'MarkerEdgeColor',colorArr{i})
-        %}
     end
     box on
     xlabel('$\gamma$')
+    ylabel('$\sigma_{p,xz} L^4/ E_Y I$')
     xlim([0 1500])
     legend(muLegendArr,'location','bestoutside')
     title([fileNameArr{1},' $N_{fib} =$ ',num2str(nfibArr(j))])

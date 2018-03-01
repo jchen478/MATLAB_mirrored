@@ -15,19 +15,20 @@ close all;
 %%%%%%%%%%%%%%%%%%%%% U-shaped fibers %%%%%%%%%%%%%%%%%%%%%
 % fileNameArr = {'theta0'};thetaArr = 0;
 % fileNameArr = {'theta1'}; thetaArr = 1;
-% fileNameArr = {'theta3'}; thetaArr = 3;
+fileNameArr = {'theta3'}; thetaArr = 3;
 % fileNameArr = {'theta6'}; thetaArr = 6;
 
 nfibArr = [160 240 320 640 1280 3200 6400 10240 12800];
 lboxArr = [300 343.4 378 476.2 600 814.3 1026 1200 1293];
 muArr = [0 1 2 3 4 5 7 10 15 17 20 23];
+muArr = [0 1 2 3 4 5  10 15  20 ];
 rpFiber = 75;
 colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('Orange') rgb('Gold') rgb('Lime')...
     rgb('Olive') rgb('DarkGreen') rgb('LightSkyBlue') ...
     rgb('MediumBlue') rgb('Plum') rgb('Purple') };
 %}
-%%{
+%{
 %%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%% 
 nfibArr = [160 240  320 640 1280 3200 6400];
 lboxArr = [300 343.4 378 476.2 600 814.3  1026];
@@ -139,12 +140,12 @@ end
 % Find intensity through fit function
 intensity = zeros(nMu,nNfib,nTheta);
 dbin = 20;
-for k=1:nTheta
-    for j=1:nNfib
-        intensity(:,j,k) = intensityFitFunc(fileNameArr{k},nfibArr(j), dbin, lboxArr(j), nMu, j+nNfib*(k-1));
-    end
-end
-%}
+% for k=1:nTheta
+%     for j=1:nNfib
+%         intensity(:,j,k) = intensityFitFunc(fileNameArr{k},nfibArr(j), dbin, lboxArr(j), nMu, j+nNfib*(k-1));
+%     end
+% end
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Plot P vs. mu
@@ -175,7 +176,7 @@ for k=1:nTheta
 end
 
 figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
-title('Particle stress contribution')
+% title('Particle stress contribution')
 dataFile{2} = [dataFile{2},'sigP_vs_mu'];
 ylabel('$\sigma_{p,xz} L^4/ E_Y I$')
 hold on
@@ -210,7 +211,7 @@ for k=1:nTheta
 end
 
 figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
-title('Relative viscosity')
+% title('Relative viscosity')
 dataFile{5} = [dataFile{5},'etarel_vs_mu'];
 ylabel('$\eta_{rel}$')
 hold on
@@ -222,7 +223,7 @@ for k=1:nTheta
 end
 
 figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
-title('Number of contacts per fiber')
+% title('Number of contacts per fiber')
 dataFile{6} = [dataFile{6},'nc_vs_mu'];
 ylabel('$N_c$')
 hold on
@@ -252,7 +253,11 @@ for i=figStart:figStart+6
     xlabel('$\mu$')
     xlim([0 inf])
     legend(thetaNfibLegendArr,'location','bestoutside')
-    print(dataFile{ind},'-dpng')
+    h = figure(i); 
+    set(h,'Units','Inches');
+    pos = get(h,'Position');
+    set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+    print(h,dataFile{ind},'-dpdf','-r0')
     ind = ind + 1;
 end
 

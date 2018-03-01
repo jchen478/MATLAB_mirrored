@@ -11,11 +11,11 @@ close all;
 %%% Define common parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%{
+%{
 %%%%%%%%%%%%%%%%%%%%% U-shaped fibers %%%%%%%%%%%%%%%%%%%%%
 % fileNameArr = {'theta0'};thetaArr = 0;
 % fileNameArr = {'theta1'}; thetaArr = 1;
-fileNameArr = {'theta3'}; thetaArr = 3;
+% fileNameArr = {'theta3'}; thetaArr = 3;
 % fileNameArr = {'theta6'}; thetaArr = 6;
 
 nfibArr = [160 240 320 640 1280 3200 6400 10240 12800];
@@ -27,7 +27,7 @@ colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('Olive') rgb('DarkGreen') rgb('LightSkyBlue') ...
     rgb('MediumBlue') rgb('Plum') rgb('Purple') };
 %}
-%{
+%%{
 %%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%% 
 nfibArr = [160 240  320 640 1280 3200 6400];
 lboxArr = [300 343.4 378 476.2 600 814.3  1026];
@@ -82,7 +82,6 @@ figStart = 1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 dataPath = '../data_stressVSfriction/averagedValues/';
-dataPathR1 = '../data_stressVSfriction/averagedValues_replicate1/';
 
 % allocate space
 particle_stress = zeros(nMu,nNfib,nTheta);
