@@ -19,7 +19,6 @@ colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
 nfibArr = [160 240  320 640 1280 3200 6400];
 lboxArr = [300 343.4 378 476.2 600 814.3  1026];
 muArr = [0 1 2 3 4 5 10 15 20];
-thetaArr = [3];
 fileNameArr = {'helical'};
 rpFiber = 75;
 colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
@@ -33,27 +32,23 @@ Imom = pi*a^4/4;    % area moment (m^4)
 EY = 1e9;           % Young's modulus (Pa m^2)
 eta0 = 1;           % fluid viscosity (Pa s)
 
-nTheta = length(thetaArr);
+% nTheta=1;
 nMu = length(muArr);
 nLbox = length(lboxArr);
 nNfib = length(nfibArr);
 muLegendArr = cell(nMu,1);
-thetaNfibLegendArr = cell(nTheta*nNfib,1);
+thetaNfibLegendArr = cell(nNfib,1);
 
 
 for i=1:nMu
     muLegendArr{i} = ['$\mu =$ ',num2str(muArr(i))];
 end
 if strcmpi(fileNameArr,'helical')
-    for i=1:nTheta
         for j=1:nNfib
-            thetaNfibLegendArr{(i-1)*nNfib+j} = ['$(\theta_{eq},\phi_{eq},N_{fib}) =$ (0.8, 0.7, ',num2str(nfibArr(j)),')'];
+            thetaNfibLegendArr{j} = ['$(\theta_{eq},\phi_{eq},N_{fib}) =$ (0.8, 0.7, ',num2str(nfibArr(j)),')'];
         end
-    end
 else
-    for i=1:nTheta
         for j=1:nNfib
-            thetaNfibLegendArr{(i-1)*nNfib+j} = ['$(\theta_{eq},N_{fib}) =$ (0.',num2str(thetaArr(i)),', ',num2str(nfibArr(j)),')'];
+            thetaNfibLegendArr{j} = ['$(\theta_{eq},N_{fib}) =$ (0.',num2str(thetaArr(i)),', ',num2str(nfibArr(j)),')'];
         end
-    end
 end
