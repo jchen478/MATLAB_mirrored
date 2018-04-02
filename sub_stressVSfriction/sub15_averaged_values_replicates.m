@@ -232,7 +232,7 @@ for i=1:7
     end
 end
 
-figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
+figure('Units','Inches','Position',[0.5 0.5 6.5 3.5])
 dataFile{1} = [dataFile{1},'I_vs_mu'];
 title(['Intensity $d_{bin} = $',num2str(dbin)])
 ylabel('$I$')
@@ -250,7 +250,7 @@ for k=1:nTheta
     end
 end
 
-figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
+figure('Units','Inches','Position',[0.5 4 6.5 3.5])
 title('Particle stress contribution')
 dataFile{2} = [dataFile{2},'sigP_vs_mu'];
 ylabel('$\sigma_{p,xz} L^4/ E_Y I$')
@@ -268,7 +268,7 @@ for k=1:nTheta
     end
 end
 
-figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
+figure('Units','Inches','Position',[7 0.5 6.5 3.5])
 title('First normal stress difference')
 dataFile{3} = [dataFile{3},'norm1_vs_mu'];
 ylabel('$N_1 L^4/ E_Y I$')
@@ -286,7 +286,7 @@ for k=1:nTheta
     end
 end
 
-figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
+figure('Units','Inches','Position',[7 4 6.5 3.5])
 title('Second normal stress difference')
 dataFile{4} = [dataFile{4},'norm2_vs_mu'];
 ylabel('$N_2 L^4/ E_Y I$')
@@ -304,7 +304,7 @@ for k=1:nTheta
     end
 end
 
-figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
+figure('Units','Inches','Position',[13.5 0.5 6.5 3.5])
 title('Relative viscosity')
 dataFile{5} = [dataFile{5},'etarel_vs_mu'];
 ylabel('$\eta_{rel}$')
@@ -322,7 +322,7 @@ for k=1:nTheta
     end
 end
 
-figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
+figure('Units','Inches','Position',[13.5 4 6.5 3.5])
 title('Number of contacts per fiber')
 dataFile{6} = [dataFile{6},'nc_vs_mu'];
 ylabel('$N_c$')
@@ -340,7 +340,7 @@ for k=1:nTheta
     end
 end
 
-figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
+figure('Units','Inches','Position',[7 7 6.5 3.5])
 dataFile{7} = [dataFile{7},'Eelas_vs_mu'];
 title('Elastic energy stored per fiber')
 ylabel('$<E_{elastic}>/ 8\pi\eta_0\dot{\gamma}l^3$')
@@ -364,7 +364,11 @@ for i=figStart:figStart+6
     xlabel('$\mu$')
     xlim([0 inf])
     legend(thetaNfibLegendArr,'location','bestoutside')
-    print(dataFile{ind},'-dpng')
+    h = figure(i); 
+    set(h,'Units','Inches');
+    pos = get(h,'Position');
+    set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+    print(h,dataFile{ind},'-dpdf','-r0')
     ind = ind + 1;
 end
 
