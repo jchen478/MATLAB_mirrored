@@ -2,90 +2,24 @@
 %%% Plot averaged values
 %%% -- properties include intensity, nc, sigP, eta, N1, N2, Eelas
 %%%
-
-
-
 clc;
 clear;
 close all;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Define common parameters
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define common parameters
+simulation_cases;
 
-%{
-%%%%%%%%%%%%%%%%%%%%% U-shaped fibers %%%%%%%%%%%%%%%%%%%%%
-% fileNameArr = {'theta0'};thetaArr = 0;
-% fileNameArr = {'theta1'}; thetaArr = 1;
-% fileNameArr = {'theta3'}; thetaArr = 3;
-% fileNameArr = {'theta6'}; thetaArr = 6;
-
-nfibArr = [160 240 320 640 1280 3200 6400 10240 12800];
-lboxArr = [300 343.4 378 476.2 600 814.3 1026 1200 1293];
-muArr = [0 1 2 3 4 5 7 10 15 17 20 23];
-rpFiber = 75;
-colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
-    rgb('Orange') rgb('Gold') rgb('Lime')...
-    rgb('Olive') rgb('DarkGreen') rgb('LightSkyBlue') ...
-    rgb('MediumBlue') rgb('Plum') rgb('Purple') };
-%}
-%%{
-%%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%% 
-nfibArr = [160 240  320 640 1280 3200 6400];
-lboxArr = [300 343.4 378 476.2 600 814.3  1026];
-muArr = [0 1 2 3 4 5 10 15 20];
-thetaArr = [3];
-fileNameArr = {'helical'};
-rpFiber = 75;
-colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
-    rgb('Orange') rgb('Gold') rgb('Lime')...
-    rgb('DarkGreen') rgb('LightSkyBlue') rgb('Plum')};
-%}
-
-% fiber dimensions
-a = 1.60E-05;       % radius (m)
-Imom = pi*a^4/4;    % area moment (m^4)
-EY = 1e9;           % Young's modulus (Pa m^2)
-eta0 = 1;           % fluid viscosity (Pa s)
-
-nTheta = length(thetaArr);
-nMu = length(muArr);
-nLbox = length(lboxArr);
-nNfib = length(nfibArr);
-muLegendArr = cell(nMu,1);
-thetaNfibLegendArr = cell(nTheta*nNfib,1);
-markersize = 50;
-
-for i=1:nMu
-    muLegendArr{i} = ['$\mu =$ ',num2str(muArr(i))];
-end
-if strcmpi(fileNameArr,'helical')
-    for i=1:nTheta
-        for j=1:nNfib
-            thetaNfibLegendArr{(i-1)*nNfib+j} = ['$(\theta_{eq},\phi_{eq},N_{fib}) =$ (0.8, 0.7, ',num2str(nfibArr(j)),')'];
-        end
-    end
-else
-    for i=1:nTheta
-        for j=1:nNfib
-            thetaNfibLegendArr{(i-1)*nNfib+j} = ['$(\theta_{eq},N_{fib}) =$ (0.',num2str(thetaArr(i)),', ',num2str(nfibArr(j)),')'];
-        end
-    end
-end
+% data path
+dataPath = '../data_stressVSfriction/averagedValues/';
 
 % replicate info
 nReplicate = 2; 
 replicate_flag = zeros(nNfib,1); 
 
+% figure info
 figStart = 1;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Read files
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-dataPath = '../data_stressVSfriction/averagedValues/';
-
-% allocate space
+% array allocation
 particle_stress = zeros(nMu,nNfib,nTheta);
 std_particle_stress = zeros(nMu,nNfib,nTheta);
 relative_viscosity = zeros(nMu,nNfib,nTheta);
@@ -105,7 +39,7 @@ N2star = zeros(nMu,nReplicate+1);
 nc = zeros(nMu,nReplicate+1); 
 elas = zeros(nMu,nReplicate+1); 
 
-% read in averaged
+%% read in averaged
 for k=1:nTheta
     for j=1:nNfib
         % read files
@@ -224,7 +158,7 @@ end
 
 dataFile = cell(7,1);
 for i=1:7
-    dataFile{i} = 'fig15_averaged_values_replicates/';
+    dataFile{i} = 'fig1_averaged_values/';
     for k=1:nTheta
         dataFile{i} = [dataFile{i},fileNameArr{k},'_'];
     end
@@ -662,6 +596,6 @@ figStart = figStart + 7*nTheta;
 save(fileNameArr{1})
 
 
-name = ['sub15_',fileNameArr{1}]; 
+name = ['sub1_',fileNameArr{1}]; 
 save(name)
 
