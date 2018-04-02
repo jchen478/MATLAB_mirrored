@@ -191,6 +191,7 @@ intensity = zeros(nMu,nNfib,nTheta);
 std_intensity = zeros(nMu,nNfib,nTheta);
 dbin = 20;
 I = zeros(nMu,nReplicate); 
+%{
 for k=1:nTheta
     for j=1:nNfib
         intensityDataPath = '../data_stressVSfriction/intensityBin/';

@@ -9,7 +9,7 @@ close all;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Define common parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%{
+%{
 %%%%%%%%%%%%%%%%%%%%% U-shaped fibers %%%%%%%%%%%%%%%%%%%%%
 % fileNameArr = {'theta0'}; thetaArr = 0;
 % fileNameArr = {'theta1'}; thetaArr = 1;
@@ -20,14 +20,16 @@ nfibArr = [160 240 320 640 1280 3200 6400 10240 12800];
 lboxArr = [300 343.4 378 476.2 600 814.3 1026 1200 1293];
 muArr = [0 1 2 3 4 5 7 10 15 17 20 23];
 
+muArr = [0 1 2 3 4 5 10 15 20];
+
 rpFiber = 75;
 colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('Orange') rgb('Gold') rgb('Lime')...
     rgb('Olive') rgb('DarkGreen') rgb('LightSkyBlue') ...
     rgb('MediumBlue') rgb('Plum') rgb('Purple') };
 %}
-%{
-%%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%% 
+%%{
+%%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%%
 nfibArr = [160 240  320 640 1280 3200 6400];
 lboxArr = [300 343.4 378 476.2 600 814.3  1026];
 muArr = [0 1 2 3 4 5 10 15 20];
@@ -87,6 +89,7 @@ for j=1:nNfib
     figure('units','normalized','outerposition',[0.2 0.2 0.25 0.4])
     hold on
     title([fileNameArr{1}, ' ', num2str(nfibArr(j))]);
+    temp = zeros(nMu,1);
     for i=1:nMu
         
         name = [dataPath,fileNameArr{1},'_clusterp_nfib',num2str(nfibArr(j)),'_',num2str(muArr(i)),'.txt'];
@@ -94,6 +97,7 @@ for j=1:nNfib
         data = fscanf(File,'%f',[35 Inf])';
         fclose(File);
         
+        keep = ones(size(data,1),1);
         % condition for elimination
         % 1. Percolation
         %%{
@@ -161,20 +165,20 @@ for j=1:nNfib
         mle3 = data(:,35);
         
         % calculate invariants of gyration tensor
-        I1 = (lam1+lam2+lam3)./lam3; 
+        I1 = (lam1+lam2+lam3)./lam3;
         I2 = (lam1.*lam2+lam2.*lam3+lam1.*lam3)./(lam3.^2);
-        I3 = (lam1.*lam2.*lam3)./lam3.^3; 
+        I3 = (lam1.*lam2.*lam3)./lam3.^3;
         
-        N(i,j) = length(lam1); 
+        N(i,j) = length(lam1);
         
-        allstrain = 1000:25:1500; 
-        allN = zeros(length(allstrain),1); 
+        allstrain = 1000:25:1500;
+        allN = zeros(length(allstrain),1);
         for ii=1:length(allstrain)
-            tstrain = allstrain(ii); 
-            allN(ii) = sum(strain == tstrain); 
+            tstrain = allstrain(ii);
+            allN(ii) = sum(strain == tstrain);
         end
-        Np_avg(i,j) = mean(allN); 
-        Np_std(i,j) = std(allN); 
+        Np_avg(i,j) = mean(allN);
+        Np_std(i,j) = std(allN);
         
         % different plots
         % 1. Third principal axis
@@ -186,7 +190,7 @@ for j=1:nNfib
         zlabel('$\nu_{3,z}$ (gradient)')
         %}
         % 2. mle3 * Third principal axis
-        %{       
+        %{
         scatter3(mle3.*abs(x3),mle3.*abs(y3),mle3.*abs(z3),'filled')
         box on
         xlabel('$\nu_{3,x}MLE_3$ (flow)')
@@ -194,7 +198,7 @@ for j=1:nNfib
         zlabel('$\nu_{3,z}MLE_3$ (gradient)')
         %}
         % 3. mle3
-        %{
+        %%{
         scatter(mu,mle3,'filled')
         xlabel('$\mu$')
         ylabel('$MLE_3$')
@@ -230,23 +234,23 @@ for j=1:nNfib
         ylabel('$I_3$')
         %}
         % 9. nc
-        %%{
+        %{
         scatter(mu,nC./nfib,'filled')
         xlabel('$\mu$')
-        ylabel('$N_{fib}$ in cluster')
+        xlim([0 25])
+        ylabel('$N_{fib,c}/N_{fib}$')
         %}
     end
-    legend(muLegendArr,'location','bestoutside')
 end
 
-se_N = zeros(nMu,nNfib); 
+se_N = zeros(nMu,nNfib);
 figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
 % title('Number of percolating flocs')
 ylabel('$<N_p>$')
 hold on
 for j=1:nNfib
-%     plot(muArr,N(:,j),...
-%         '-.o','MarkerSize',10, 'linewidth',2.5);
+    %     plot(muArr,N(:,j),...
+    %         '-.o','MarkerSize',10, 'linewidth',2.5);
     errorbar(muArr,Np_avg(:,j),Np_std(:,j)/2,...
         '-.o','MarkerSize',10, 'linewidth',2.5);
 end
@@ -259,8 +263,8 @@ figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
 ylabel('$<N_p> L/L_{box}$')
 hold on
 for j=1:nNfib
-%     plot(muArr,N(:,j)/lboxArr(j),...
-%         '-.o','MarkerSize',10, 'linewidth',2.5);
+    %     plot(muArr,N(:,j)/lboxArr(j),...
+    %         '-.o','MarkerSize',10, 'linewidth',2.5);
     errorbar(muArr,Np_avg(:,j)/lboxArr(j)*2*rpFiber,Np_std(:,j)*2*rpFiber/2/lboxArr(j),...
         '-.o','MarkerSize',10, 'linewidth',2.5);
 end

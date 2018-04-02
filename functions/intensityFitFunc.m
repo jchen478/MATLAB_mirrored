@@ -7,7 +7,7 @@ File = fopen(baseFile,'r');
 data = fscanf(File,'%f',[2 Inf])';
 fclose(File);
 binArr = data(:,1);
-baseArr = data(:,2);
+% baseArr = data(:,2);
 dbin = side./binArr;
 nCase = length(binArr);
 IntensityBin = zeros(nMu,nCase);
@@ -26,11 +26,7 @@ end
 
 %% find regression line
 fit = zeros(nMu,2);
-% 1. Subtract base
-% for i=1:nCase
-%     IntensityBin(:,i) = IntensityBin(:,i) - baseArr(i);
-% end
-% 2. Regression for every mu
+% 1. Regression for every mu
 for j=1:nMu
     p = polyfit(dbin',IntensityBin(j,:),1);
     fit(j,:) = p;

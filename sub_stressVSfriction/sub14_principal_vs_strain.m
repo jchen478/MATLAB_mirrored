@@ -28,14 +28,14 @@ colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('MediumBlue') rgb('Plum') rgb('Purple') };
 %}
 %%{
-%%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%%
 nfibArr = [160 240  320 640 1280 3200 6400];
 lboxArr = [300 343.4 378 476.2 600 814.3  1026];
 muArr = [0 1 2 3 4 5 10 15 20];
 
-nfibArr = [3200 6400];
-lboxArr = [814.3  1026];
-muArr = [5 10 20];
+% nfibArr = [3200 ];
+% lboxArr = [814.3  ];
+% muArr = [10 ];
 
 thetaArr = [3];
 fileNameArr = {'helical'};
@@ -45,8 +45,7 @@ colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('DarkGreen') rgb('LightSkyBlue') rgb('Plum')};
 
 
-colorArr = {rgb('Lime')...
-    rgb('DarkGreen') rgb('Plum')};
+% colorArr = { rgb('DarkGreen')};
 %}
 
 nTheta = length(thetaArr);
@@ -87,18 +86,17 @@ end
 %%  Plot principal directions vs. strain
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dataPath = '../data_stressVSfriction/ClusterP/';
-N = zeros(nMu, nNfib); % number of flocs meeting criteria
 
 for j=1:nNfib
-%     figure('units','normalized','outerposition',[0.2 0.2 0.25 0.4])
-figure('units','normalized','outerposition',[0.1 0.1 0.4 0.5])
+    figure('units','normalized','outerposition',[0.1 0.1 0.4 0.5])
     hold on
     title([fileNameArr{1}, ' ', num2str(nfibArr(j))]);
     for i=1:nMu
         
+        %         name = 'helical_3200_10_copy0_dg5.txt';
         name = [dataPath,fileNameArr{1},'_clusterp_nfib',num2str(nfibArr(j)),'_',num2str(muArr(i)),'.txt'];
         File=fopen(name,'r');
-        data = fscanf(File,'%f',[35 Inf])';
+        data = fscanf(File,'%f',[36 Inf])';
         fclose(File);
         
         keep = ones(size(data,1),1);
@@ -108,23 +106,6 @@ figure('units','normalized','outerposition',[0.1 0.1 0.4 0.5])
         sidexo = data(:,5);
         mle3 = data(:,35);
         keep = (mle3 >= sqrt(3)*sidexo);
-        %}
-        % 2. Number of fibers in cluster
-        %{
-        nC = data(:,10);
-        keep = (nC >= 10);
-        %}
-        % 3. Normalized number of fibers in cluster
-        %{
-        nfib = data(:,1);
-        nC = data(:,10);
-        keep = (nC >= 0.01*nfib);
-        %}
-        % 4. Radius of gyration
-        %{
-        Rg = data(:,32);
-        sidexo = data(:,5);
-        keep = (Rg >= 0.6*sidexo);
         %}
         
         % delete empty rows
@@ -169,18 +150,15 @@ figure('units','normalized','outerposition',[0.1 0.1 0.4 0.5])
         mle3 = data(:,35);
         
         % calculate invariants of gyration tensor
-        I1 = (lam1+lam2+lam3)./lam3; 
+        I1 = (lam1+lam2+lam3)./lam3;
         I2 = (lam1.*lam2+lam2.*lam3+lam1.*lam3)./(lam3.^2);
-        I3 = (lam1.*lam2.*lam3)./lam3.^3; 
+        I3 = (lam1.*lam2.*lam3)./lam3.^3;
         
         % shape measurements
-        b = lam3.^2 - 0.5*(lam2.^2+lam1.^2); %asphericity 
+        b = lam3.^2 - 0.5*(lam2.^2+lam1.^2); %asphericity
         c = lam2.^2 - lam1.^2; % acylindricity
-        k2 = 3/2*(lam1.^4+lam2.^4+lam3.^4)./(lam1.^2+lam2.^2+lam3.^2).^2-0.5; 
+        k2 = 3/2*(lam1.^4+lam2.^4+lam3.^4)./(lam1.^2+lam2.^2+lam3.^2).^2-0.5;
         % relative shape anisotropy
-        
-        
-        N(i,j) = length(lam1);
         
         % different plots
         % 1. Third principal axis
@@ -192,7 +170,7 @@ figure('units','normalized','outerposition',[0.1 0.1 0.4 0.5])
         zlabel('$\nu_{3,z}$ (gradient)')
         %}
         % 2. mle3 * Third principal axis
-        %{       
+        %{
         scatter3(mle3.*abs(x3),mle3.*abs(y3),mle3.*abs(z3),'filled')
         box on
         xlabel('$\nu_{3,x}MLE_3$ (flow)')
@@ -248,34 +226,9 @@ figure('units','normalized','outerposition',[0.1 0.1 0.4 0.5])
             'MarkerFaceColor',colorArr{i},...
             'MarkerEdgeColor',colorArr{i})
         xlabel('$\gamma$')
-        ylabel('$N_{fib}$ in floc')
+        %         ylabel('$mle1$ in floc')
     end
     legend(muLegendArr,'location','bestoutside')
 end
 
-se_N = zeros(nMu,nNfib); 
-figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
-title('Number of flocs meeting criteria')
-ylabel('$N$')
-hold on
-for j=1:nNfib
-    plot(muArr,N(:,j),...
-        '-.o','MarkerSize',10, 'linewidth',2.5);
-end
-xlabel('$\mu$')
-xlim([0 inf])
-legend(thetaNfibLegendArr,'location','bestoutside')
 
-figure('units','normalized','outerposition',[0.1 0.1 0.7 0.6])
-title('Normalized number of flocs meeting criteria')
-ylabel('$N/L_{box}$')
-hold on
-for j=1:nNfib
-    plot(muArr,N(:,j)/lboxArr(j),...
-        '-.o','MarkerSize',10, 'linewidth',2.5);
-end
-xlabel('$\mu$')
-xlim([0 inf])
-legend(thetaNfibLegendArr,'location','bestoutside')
-
-C1 = load('sub1_theta6');

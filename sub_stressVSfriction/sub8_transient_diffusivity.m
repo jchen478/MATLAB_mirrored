@@ -13,12 +13,13 @@ close all;
 %%%%%%%%%%%%%%%%%%%%% U-shaped fibers %%%%%%%%%%%%%%%%%%%%%
 % fileNameArr = {'theta0'}; thetaArr = 0;
 % fileNameArr = {'theta1'}; thetaArr = 1;
-fileNameArr = {'theta3'}; thetaArr = 3;
-% fileNameArr = {'theta6'}; thetaArr = 6;
+% fileNameArr = {'theta3'}; thetaArr = 3;
+fileNameArr = {'theta6'}; thetaArr = 6;
 
 nfibArr = [160 240 320 640 1280 3200 6400 10240 12800];
 lboxArr = [300 343.4 378 476.2 600 814.3 1026 1200 1293];
 muArr = [0 1 2 3 4 5 7 10 15 17 20 23];
+
 rpFiber = 75;
 colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('Orange') rgb('Gold') rgb('Lime')...
@@ -71,7 +72,9 @@ figStart = 1;
 dataPath = '../data_stressVSfriction/MSD/';
 
 for j=1:nNfib
-    figure('units','normalized','outerposition',[0.2 0.2 0.5 0.8])
+
+    figure('Units','Inches','Position',[3 3 3.5 6.5])
+    set(gca,'XMinorTick','on')
     hold on
     for i=1:nMu
         name = [dataPath,fileNameArr{1},'_MSD_nfib',num2str(nfibArr(j)),'_',num2str(muArr(i)),'.txt'];
@@ -101,7 +104,7 @@ for i=figStart:figStart+nNfib-1
         subplot(2,1,j)
         hold on
         box on
-        xlim([10 inf])
+        xlim([1600 inf])
         xlabel('$\gamma$')
         legend(muLegendArr,'location','bestoutside')
         set(gca,'fontsize',16)
@@ -113,7 +116,7 @@ figStart = figStart + nNfib;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Calculate moving regression
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-nStrain = 3000;
+nStrain = 4000;
 window = 2; 
 Dyy = zeros(nStrain,nMu,nNfib);
 Dzz = zeros(nStrain,nMu,nNfib);
@@ -144,7 +147,8 @@ end
 strain=0:nStrain-1; 
 strain = strain*0.5; 
 for j=1:nNfib
-    figure('units','normalized','outerposition',[0.2 0.2 0.5 0.8])
+    figure('Units','Inches','Position',[3 3 3.5 6.5])
+    set(gca,'XMinorTick','on')
     hold on
     for i=1:nMu
         subplot(2,1,1)
