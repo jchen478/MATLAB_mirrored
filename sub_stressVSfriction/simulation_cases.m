@@ -1,9 +1,9 @@
-%{
+%%{
 %%%%%%%%%%%%%%%%%%%%% U-shaped fibers %%%%%%%%%%%%%%%%%%%%%
 % fileNameArr = {'theta0'};thetaArr = 0;
 % fileNameArr = {'theta1'}; thetaArr = 1;
 % fileNameArr = {'theta3'}; thetaArr = 3;
-% fileNameArr = {'theta6'}; thetaArr = 6;
+fileNameArr = {'theta6'}; thetaArr = 6;
 
 nfibArr = [160 240 320 640 1280 3200 6400 10240 12800];
 lboxArr = [300 343.4 378 476.2 600 814.3 1026 1200 1293];
@@ -14,7 +14,7 @@ colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('Olive') rgb('DarkGreen') rgb('LightSkyBlue') ...
     rgb('MediumBlue') rgb('Plum') rgb('Purple') };
 %}
-%%{
+%{
 %%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%% 
 nfibArr = [160 240  320 640 1280 3200 6400];
 lboxArr = [300 343.4 378 476.2 600 814.3  1026];
@@ -31,6 +31,9 @@ a = 1.60E-05;       % radius (m)
 Imom = pi*a^4/4;    % area moment (m^4)
 EY = 1e9;           % Young's modulus (Pa m^2)
 eta0 = 1;           % fluid viscosity (Pa s)
+nseg = 5;   
+rps = 15; 
+kb = 10; 
 
 % nTheta=1;
 nMu = length(muArr);
@@ -44,11 +47,11 @@ for i=1:nMu
     muLegendArr{i} = ['$\mu =$ ',num2str(muArr(i))];
 end
 if strcmpi(fileNameArr,'helical')
-        for j=1:nNfib
-            thetaNfibLegendArr{j} = ['$(\theta_{eq},\phi_{eq},N_{fib}) =$ (0.8, 0.7, ',num2str(nfibArr(j)),')'];
-        end
+    for j=1:nNfib
+        thetaNfibLegendArr{j} = ['$(\theta_{eq},\phi_{eq},N_{fib}) =$ (0.8, 0.7, ',num2str(nfibArr(j)),')'];
+    end
 else
-        for j=1:nNfib
-            thetaNfibLegendArr{j} = ['$(\theta_{eq},N_{fib}) =$ (0.',num2str(thetaArr(i)),', ',num2str(nfibArr(j)),')'];
-        end
+    for j=1:nNfib
+        thetaNfibLegendArr{j} = ['$(\theta_{eq},N_{fib}) =$ (0.',num2str(thetaArr),', ',num2str(nfibArr(j)),')'];
+    end
 end

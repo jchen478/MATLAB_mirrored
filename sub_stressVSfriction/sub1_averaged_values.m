@@ -288,7 +288,7 @@ end
 figStart = figStart + 7;
 %}
 
-save(fileNameArr{1})
-name = ['sub1_',fileNameArr{1}];
-save(name)
+% save(fileNameArr{1})
+% name = ['sub1_',fileNameArr{1}];
+% save(name)
 
