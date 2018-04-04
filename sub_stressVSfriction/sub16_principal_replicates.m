@@ -29,7 +29,7 @@ end
 dataFile{1} = [ dataFile{1},'principal_direction3'];
 
 % sampling info
-sample_strain = 1000:25:1500;
+sample_strain = 1400:25:2000;
 nSample = length(sample_strain);
 
 % array allocation
@@ -217,10 +217,12 @@ for j=1:nNfib
         %         ylabel('$mle1$ in floc')
         
     end
+    legend(muLegendArr,'location','bestoutside')
     % average over replicates
     average_range = replicate_flag(j) + 1;
     Np_avg(:,j) = mean(N(:,1:average_range),2);
     Np_std(:,j) = std(N(:,1:average_range),0,2);
+    
 end
 
 %% plot number of percolation structures
