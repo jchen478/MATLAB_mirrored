@@ -1,4 +1,4 @@
-%{
+%%{
 %%%%%%%%%%%%%%%%%%%%% U-shaped fibers %%%%%%%%%%%%%%%%%%%%%
 % fileNameArr = {'theta0'};thetaArr = 0;
 % fileNameArr = {'theta1'}; thetaArr = 1;
@@ -14,7 +14,7 @@ colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('Olive') rgb('DarkGreen') rgb('LightSkyBlue') ...
     rgb('MediumBlue') rgb('Plum') rgb('Purple') };
 %}
-%%{
+%{
 %%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%% 
 nfibArr = [160 240  320 640 1280 3200 6400];
 lboxArr = [300 343.4 378 476.2 600 814.3  1026];
