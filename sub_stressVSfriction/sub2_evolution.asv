@@ -34,8 +34,7 @@ for j=1:nNfib
     set(gca,'XMinorTick','on')
     hold on;
     ylabel('$N_c$')
-    maxNC = 0;
-    minNC = 0;
+    maxNC = 
     for i=1:nMu
         name = [dataPath,fileNameArr{1},'_NC_nfib',num2str(nfibArr(j)),'_',num2str(muArr(i)),'.txt'];
         File = fopen(name,'r');
@@ -63,20 +62,13 @@ for j=1:nNfib
             'MarkerFaceColor',colorArr{i},...
             'MarkerEdgeColor',colorArr{i},...
             'MarkerSize',2)
-        % find maximum and minimum
-        if min(B) < minNC
-            minNC = min(B);
-        end
-        if max(B) > maxNC
-            maxNC = max(B);
-        end
     end
     box on
     xlabel('$\gamma$')
     xlim([xLowLim xUpLim])
     legend(muLegendArr,'location','bestoutside')
     title([fileNameArr{1},' $N_{fib} =$ ',num2str(nfibArr(j))])
-    line([1400 1400],[minNC maxNC],'color',rgb('DeepPink'))
+    line([1400 1400],[0 inf],'color',rgb('Crimson'))
 end
 
 %}
@@ -90,8 +82,6 @@ for j=1:nNfib
     figure(j)
     subplot(2,1,2)
     hold on;
-    maxStress = 0;
-    minStress = 0;
     for i=1:nMu
         name = [dataPath,fileNameArr{1},'_stress_nfib',num2str(nfibArr(j)),'_',num2str(muArr(i)),'.txt'];
         File = fopen(name,'r');
@@ -137,12 +127,6 @@ for j=1:nNfib
             'MarkerFaceColor',colorArr{i},...
             'MarkerEdgeColor',colorArr{i},...
             'MarkerSize',2)
-        if min(B) < minStress
-            minStress = min(B);
-        end
-        if max(B) > maxStress
-            maxStress = max(B);
-        end
     end
     box on
     xlabel('$\gamma$')
@@ -150,6 +134,5 @@ for j=1:nNfib
     xlim([xLowLim xUpLim])
     legend(muLegendArr,'location','bestoutside')
     title([fileNameArr{1},' $N_{fib} =$ ',num2str(nfibArr(j))])
-    line([1400 1400],[minStress maxStress],'color',rgb('DeepPink'))
 end
 

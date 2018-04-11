@@ -147,7 +147,6 @@ for j=1:nNfib
         xlabel('$\nu_{3,x}$ (flow)')
         ylabel('$\nu_{3,y}$ (vorticity)')
         zlabel('$\nu_{3,z}$ (gradient)')
-        view([-20 20])
         %}
         % 2. mle3 * Third principal axis
         %{

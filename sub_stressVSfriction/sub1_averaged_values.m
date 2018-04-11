@@ -159,114 +159,114 @@ for i=1:7
     end
 end
 
-figure('Units','Inches','Position',[0.5 0.5 6.5 3.5])
+figure('Units','Inches','Position',[0.5 0.5 6.5 3.0])
 dataFile{1} = [dataFile{1},'I_vs_mu'];
-title(['Intensity $d_{bin} = $',num2str(dbin)])
+% title(['Intensity $d_{bin} = $',num2str(dbin)])
 ylabel('$I$')
 hold on
 for j=1:nNfib
     if replicate_flag(j) == 0
         plot(muArr,intensity(:,j),...
-            '-.x','MarkerSize',10,'Linewidth',2.5')
+            '-x','MarkerSize',10,'Linewidth',2.5')
     else
         errorbar(muArr,intensity(:,j),...
             std_intensity(:,j)/2,...
-            '-.o','MarkerSize',8, 'linewidth',2.5);
+            '-o','MarkerSize',8, 'linewidth',2.5);
     end
 end
 
-figure('Units','Inches','Position',[0.5 4 6.5 3.5])
-title('Particle stress contribution')
+figure('Units','Inches','Position',[0.5 4 6.5 3.0])
+% title('Particle stress contribution')
 dataFile{2} = [dataFile{2},'sigP_vs_mu'];
 ylabel('$\sigma_{p,xz} L^4/ E_Y I$')
 hold on
 for j=1:nNfib
     if replicate_flag(j) == 0
         plot(muArr,particle_stress(:,j).*L.^4/EY/Imom,...
-            '-.x','MarkerSize',10,'Linewidth',2.5')
+            '-x','MarkerSize',10,'Linewidth',2.5')
     else
         errorbar(muArr,particle_stress(:,j).*L.^4/EY/Imom,...
             std_particle_stress(:,j).*L.^4/EY/Imom/2,...
-            '-.o','MarkerSize',8, 'linewidth',2.5);
+            '-o','MarkerSize',8, 'linewidth',2.5);
     end
 end
 
-figure('Units','Inches','Position',[7 0.5 6.5 3.5])
-title('First normal stress difference')
+figure('Units','Inches','Position',[7 0.5 6.5 3.0])
+% title('First normal stress difference')
 dataFile{3} = [dataFile{3},'norm1_vs_mu'];
 ylabel('$N_1 L^4/ E_Y I$')
 hold on
 for j=1:nNfib
     if replicate_flag(j) == 0
         plot(muArr,norm1(:,j).*L.^4/EY/Imom,...
-            '-.x','MarkerSize',10,'Linewidth',2.5')
+            '-x','MarkerSize',10,'Linewidth',2.5')
     else
         errorbar(muArr,norm1(:,j).*L.^4/EY/Imom,...
             std_norm1(:,j).*L.^4/EY/Imom/2,...
-            '-.o','MarkerSize',8, 'linewidth',2.5);
+            '-o','MarkerSize',8, 'linewidth',2.5);
     end
 end
 
-figure('Units','Inches','Position',[7 4 6.5 3.5])
-title('Second normal stress difference')
+figure('Units','Inches','Position',[7 4 6.5 3.0])
+% title('Second normal stress difference')
 dataFile{4} = [dataFile{4},'norm2_vs_mu'];
 ylabel('$N_2 L^4/ E_Y I$')
 hold on
 for j=1:nNfib
     if replicate_flag(j) == 0
         plot(muArr,norm2(:,j).*L.^4/EY/Imom,...
-            '-.x','MarkerSize',10,'Linewidth',2.5')
+            '-x','MarkerSize',10,'Linewidth',2.5')
     else
         errorbar(muArr,norm2(:,j).*L.^4/EY/Imom,...
             std_norm2(:,j).*L.^4/EY/Imom/2,...
-            '-.o','MarkerSize',8, 'linewidth',2.5);
+            '-o','MarkerSize',8, 'linewidth',2.5);
     end
 end
 
-figure('Units','Inches','Position',[13.5 0.5 6.5 3.5])
-title('Relative viscosity')
+figure('Units','Inches','Position',[13.5 0.5 6.5 3.0])
+% title('Relative viscosity')
 dataFile{5} = [dataFile{5},'etarel_vs_mu'];
 ylabel('$\eta_{rel}$')
 hold on
 for j=1:nNfib
     if replicate_flag(j) == 0
         plot(muArr,relative_viscosity(:,j),...
-            '-.x','MarkerSize',10,'Linewidth',2.5')
+            '-x','MarkerSize',10,'Linewidth',2.5')
     else
         errorbar(muArr,relative_viscosity(:,j),...
             std_relative_viscosity(:,j)/2,...
-            '-.o','MarkerSize',8, 'linewidth',2.5);
+            '-o','MarkerSize',8, 'linewidth',2.5);
     end
 end
 
-figure('Units','Inches','Position',[13.5 4 6.5 3.5])
-title('Number of contacts per fiber')
+figure('Units','Inches','Position',[13.5 4 6.5 3.0])
+% title('Number of contacts per fiber')
 dataFile{6} = [dataFile{6},'nc_vs_mu'];
 ylabel('$N_c$')
 hold on
 for j=1:nNfib
     if replicate_flag(j) == 0
         plot(muArr,number_of_contacts(:,j),...
-            '-.x','MarkerSize',10,'Linewidth',2.5')
+            '-x','MarkerSize',10,'Linewidth',2.5')
     else
         errorbar(muArr,number_of_contacts(:,j),...
             std_number_of_contacts(:,j)/2,...
-            '-.o','MarkerSize',8, 'linewidth',2.5);
+            '-o','MarkerSize',8, 'linewidth',2.5);
     end
 end
 
-figure('Units','Inches','Position',[7 7 6.5 3.5])
+figure('Units','Inches','Position',[7 7 6.5 3.0])
 dataFile{7} = [dataFile{7},'Eelas_vs_mu'];
-title('Elastic energy stored per fiber')
+% title('Elastic energy stored per fiber')
 ylabel('$<E_{elastic}>/ 8\pi\eta_0\dot{\gamma}l^3$')
 hold on
 for j=1:nNfib
     if replicate_flag(j) == 0
         plot(muArr,Eelas(:,j),...
-            '-.x','MarkerSize',10,'Linewidth',2.5')
+            '-x','MarkerSize',10,'Linewidth',2.5')
     else
         errorbar(muArr,Eelas(:,j),std_Eelas(:,j)/2,...
-            '-.o','MarkerSize',8, 'linewidth',2.5);
+            '-o','MarkerSize',8, 'linewidth',2.5);
     end
 end
 
