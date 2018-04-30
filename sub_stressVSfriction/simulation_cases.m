@@ -5,14 +5,20 @@
 % fileNameArr = {'theta3'}; thetaArr = 3;
 fileNameArr = {'theta6'}; thetaArr = 6;
 
-nfibArr = [160 240 320 640 1280 3200 6400 10240 12800];
-lboxArr = [300 343.4 378 476.2 600 814.3 1026 1200 1293];
+nfibArr = [160 240 320 640 1280 3200 6400 12800];
+lboxArr = [300 343.4 378 476.2 600 814.3 1026 1293];
 muArr = [0 1 2 3 4 5 7 10 15 17 20 23];
 rpFiber = 75;
 colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
     rgb('Orange') rgb('Gold') rgb('Lime')...
     rgb('Olive') rgb('DarkGreen') rgb('LightSkyBlue') ...
     rgb('MediumBlue') rgb('Plum') rgb('Purple') };
+
+muArr = [0 1 2 3 4 5 7 10 15 20];
+colorArr = {rgb('DarkRed') rgb('Crimson') rgb('OrangeRed')...
+    rgb('Orange') rgb('Gold') rgb('Lime')...
+    rgb('Olive') rgb('DarkGreen') rgb('LightSkyBlue') ...
+     rgb('Plum')};
 %}
 %%{
 %%%%%%%%%%%%%%%%%%%%% Helical fibers %%%%%%%%%%%%%%%%%%%%% 
@@ -42,16 +48,17 @@ nNfib = length(nfibArr);
 muLegendArr = cell(nMu,1);
 thetaNfibLegendArr = cell(nNfib,1);
 
-
 for i=1:nMu
     muLegendArr{i} = ['$\mu =$ ',num2str(muArr(i))];
 end
 if strcmpi(fileNameArr,'helical')
     for j=1:nNfib
-        thetaNfibLegendArr{j} = ['$(\theta_{eq},\phi_{eq},N_{fib}) =$ (0.8, 0.7, ',num2str(nfibArr(j)),')'];
+        thetaNfibLegendArr{j} = ['$N_{fib} =$ ',num2str(nfibArr(j))];
     end
+    caseTitle = ['$(\theta_{eq},\phi_{eq}) =$ (0.8,0.7)'];
 else
     for j=1:nNfib
-        thetaNfibLegendArr{j} = ['$(\theta_{eq},N_{fib}) =$ (0.',num2str(thetaArr),', ',num2str(nfibArr(j)),')'];
+        thetaNfibLegendArr{j} = ['$N_{fib} =$ ',num2str(nfibArr(j))];
     end
+    caseTitle = ['$(\theta_{eq},\phi_{eq}) =$ (0.',num2str(thetaArr),',0.0)'];
 end

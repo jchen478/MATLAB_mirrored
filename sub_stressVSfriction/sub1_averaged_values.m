@@ -46,7 +46,7 @@ for j=1:nNfib
     File = fopen(name,'r');
     data = fscanf(File,'%f',[28 Inf])';
     fclose(File);
-    
+        
     % define variables
     nfib = data(:,1);
     nseg = data(:,2);
@@ -159,7 +159,8 @@ for i=1:7
     end
 end
 
-figure('Units','Inches','Position',[0.5 0.5 6.5 3.0])
+figure('Units','Inches','Position',[0.5 4 5.5 4.5])
+title(caseTitle)
 dataFile{1} = [dataFile{1},'I_vs_mu'];
 % title(['Intensity $d_{bin} = $',num2str(dbin)])
 ylabel('$I$')
@@ -175,8 +176,8 @@ for j=1:nNfib
     end
 end
 
-figure('Units','Inches','Position',[0.5 4 6.5 3.0])
-% title('Particle stress contribution')
+figure('Units','Inches','Position',[0.5 4 5.5 4.5])
+title(caseTitle)
 dataFile{2} = [dataFile{2},'sigP_vs_mu'];
 ylabel('$\sigma_{p,xz} L^4/ E_Y I$')
 hold on
@@ -191,7 +192,8 @@ for j=1:nNfib
     end
 end
 
-figure('Units','Inches','Position',[7 0.5 6.5 3.0])
+figure('Units','Inches','Position',[0.5 4 5.5 4.5])
+title(caseTitle)
 % title('First normal stress difference')
 dataFile{3} = [dataFile{3},'norm1_vs_mu'];
 ylabel('$N_1 L^4/ E_Y I$')
@@ -207,7 +209,8 @@ for j=1:nNfib
     end
 end
 
-figure('Units','Inches','Position',[7 4 6.5 3.0])
+figure('Units','Inches','Position',[0.5 4 5.5 4.5])
+title(caseTitle)
 % title('Second normal stress difference')
 dataFile{4} = [dataFile{4},'norm2_vs_mu'];
 ylabel('$N_2 L^4/ E_Y I$')
@@ -223,7 +226,8 @@ for j=1:nNfib
     end
 end
 
-figure('Units','Inches','Position',[13.5 0.5 6.5 3.0])
+figure('Units','Inches','Position',[0.5 4 5.5 4.5])
+title(caseTitle)
 % title('Relative viscosity')
 dataFile{5} = [dataFile{5},'etarel_vs_mu'];
 ylabel('$\eta_{rel}$')
@@ -239,7 +243,8 @@ for j=1:nNfib
     end
 end
 
-figure('Units','Inches','Position',[13.5 4 6.5 3.0])
+figure('Units','Inches','Position',[0.5 4 5.5 4.5])
+title(caseTitle)
 % title('Number of contacts per fiber')
 dataFile{6} = [dataFile{6},'nc_vs_mu'];
 ylabel('$N_c$')
@@ -255,7 +260,8 @@ for j=1:nNfib
     end
 end
 
-figure('Units','Inches','Position',[7 7 6.5 3.0])
+figure('Units','Inches','Position',[0.5 4 5.5 4.5])
+title(caseTitle)
 dataFile{7} = [dataFile{7},'Eelas_vs_mu'];
 % title('Elastic energy stored per fiber')
 ylabel('$<E_{elastic}>/ 8\pi\eta_0\dot{\gamma}l^3$')
@@ -276,7 +282,7 @@ for i=figStart:figStart+6
     box on
     xlabel('$\mu$')
     xlim([0 inf])
-    legend(thetaNfibLegendArr,'location','bestoutside')
+    legend(thetaNfibLegendArr,'location','best')
     h = figure(i);
     set(h,'Units','Inches');
     pos = get(h,'Position');

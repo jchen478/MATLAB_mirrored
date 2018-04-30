@@ -41,6 +41,10 @@ for j=1:nNfib
         File = fopen(name,'r');
         data = fscanf(File,'%f',[5 Inf])';
         fclose(File);
+        if (size(data,1) == 1)
+            plot(0,0,'x')
+            continue
+        end      
         diff = data(2,1) - data(1,1);
         % make sure that strain is increasing
         for ii=2:length(data)
@@ -76,7 +80,7 @@ for j=1:nNfib
     xlim([xLowLim xUpLim])
     legend(muLegendArr,'location','bestoutside')
     title([fileNameArr{1},' $N_{fib} =$ ',num2str(nfibArr(j))])
-    line([1400 1400],[minNC maxNC],'color',rgb('DeepPink'))
+%     line([1400 1400],[minNC maxNC],'color',rgb('DeepPink'))
 end
 
 %}
@@ -97,6 +101,10 @@ for j=1:nNfib
         File = fopen(name,'r');
         data = fscanf(File,'%f',[7 Inf])';
         fclose(File);
+        if (size(data,1) == 1)
+            plot(0,0,'x')
+            continue
+        end
         diff = data(2,1) - data(1,1);
         nStep = length(data);
         % make sure that strain is increasing
@@ -150,6 +158,6 @@ for j=1:nNfib
     xlim([xLowLim xUpLim])
     legend(muLegendArr,'location','bestoutside')
     title([fileNameArr{1},' $N_{fib} =$ ',num2str(nfibArr(j))])
-    line([1400 1400],[minStress maxStress],'color',rgb('DeepPink'))
+%     line([1400 1400],[minStress maxStress],'color',rgb('DeepPink'))
 end
 
