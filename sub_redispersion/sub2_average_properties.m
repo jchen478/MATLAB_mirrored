@@ -3,9 +3,9 @@
 %%%% Plot the evolution of stress and number of contacts
 %%%% with change in box size and volume fraction
 
-clc;
-clear;
-close all;
+% clc;
+% clear;
+% close all;
 
 % Define common parameters
 % simulation_cases;
@@ -48,7 +48,7 @@ data(:,1) = round(data(:,1),1);
 
 % find interval averages
 r = intervals(boxstrain,sidex);
-interval_average(data(:,1),data(:,4),r);
+NC_stat = interval_average(data(:,1),data(:,4),r)
 
 % stress
 name = ['Stress_tensor.txt'];
@@ -93,5 +93,6 @@ end
 % Non-dimensionalize
 sigmap_nondim = sigmap.*L.^4/EY/Imom;
 
+sigmap_nondim_stat = interval_average(data(:,1),sigmap_nondim,r)
 
 

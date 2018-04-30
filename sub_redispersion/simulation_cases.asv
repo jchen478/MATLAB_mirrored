@@ -1,0 +1,12 @@
+% specify simulation cases for redispersion
+clc; 
+clear;
+close all;
+
+% 
+dataPath = '../data_redispersion/';
+
+% cases
+shape = 'theta6';
+aArr = [2, 3, 4, 5, 6, 7];
+muArr = [5, 10, 20];

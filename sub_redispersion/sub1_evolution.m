@@ -6,14 +6,7 @@ clear;
 close all;
 
 % Define common parameters
-% simulation_cases;
-a = 1.60E-05;       % radius (m)
-Imom = pi*a^4/4;    % area moment (m^4)
-EY = 1e9;           % Young's modulus (Pa m^2)
-eta0 = 1;           % fluid viscosity (Pa s)
-nseg = 5;
-rps = 15;
-kb = 10;
+simulation_cases;
 
 % plotting commands
 xLowLim = 0;
@@ -169,3 +162,5 @@ plot(Bt,B)
 xlim([xLowLim xUpLim])
 ylim([minStress maxStress])
 ylabel('$\sigma_{p,xz} L^4/ E_Y I$')
+
+sub2_average_properties
