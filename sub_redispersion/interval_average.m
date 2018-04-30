@@ -1,37 +1,32 @@
-function [ avg, std ] = interval_average(boxstrain,Lbox)
+function [ interval_stat ] = interval_average(strain,A,r)
 % Final average of A in each region of redispersion
 
-% initialization
-ind = 1;
-comp = Lbox(1);
+N = length(r); % number of intervals
+interval_stat = zeros(N,2); % average and standard deviation
+index = zeros(N,2); % bracketing index
 
-% region1 - shearing at same strain
-for i=2:length(Lbox)
-    if Lbox(i) ~= comp
-        region1=boxstrain(i-1);
-        ind = i;
-        break
+% round strain to the first decimal point
+strain = round(strain,1); 
+
+% find bracketing index
+index(1,1) = 1;
+n = 1;
+for i=1:length(strain)
+
+    if strain(i) == r(n)
+        index(n,2) = i;
+        if n ~= N 
+            index(n+1,1)=i+1;
+        end
+        n = n+1;
     end
+    
 end
 
-% region2 - shearing while concentrating
-for i=ind:length(Lbox)
-    if Lbox(i) == Lbox(i-1)
-        region2=boxstrain(i-1);
-        ind = i;
-        break
-    end
+% find averages and standard deviations
+for n=1:N
+    interval_stat(n,1) = mean(A(index(n,1):index(n,2)));
+    interval_stat(n,2) = std(A(index(n,1):index(n,2)));
 end
 
-% region3 - shearing at high concentration
-for i=ind:length(Lbox)
-    if Lbox(i) = Lbox(i-1)
-        region2=boxstrain(i-1);
-        ind = i;
-        break
-    end
 end
-
-
-region1
-region2

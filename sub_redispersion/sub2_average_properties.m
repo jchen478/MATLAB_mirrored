@@ -17,15 +17,6 @@ nseg = 5;
 rps = 15;
 kb = 10;
 
-% plotting commands
-xLowLim = 0;
-
-
-fig = figure('Units','Inches','Position',[1 1 3.0 3.0]);
-left_color = [.5 .5 0];
-right_color = rgb('MediumBlue');
-set(fig,'defaultAxesColorOrder',[left_color; right_color]);
-
 % box
 name = ['Lbox.txt'];
 File = fopen(name,'r');
@@ -37,28 +28,7 @@ sidey = data(:,3);
 sidez = data(:,4);
 
 volfrac = 1280*150*pi ./(sidex.*sidey.*sidez);
-a = max(volfrac)/min(volfrac)
-
-xUpLim = max(boxstrain);
-
-subplot(2,1,1)
-title('\boldmath{$\theta_{eq},\phi_{eq}=0.6,0,\mu = 20, a = 3$}')
-hold on
-% yyaxis left
-plot(data(:,1),volfrac*100,'color',rgb('Black'))
-xlim([xLowLim xUpLim])
-ylabel('\boldmath{$\phi\ (\%)$}')
-xlabel('\boldmath{$\gamma$}')
-ylim([0.2 max(volfrac)*100])
-
-subplot(2,1,2)
-% yyaxis left
-hold on
-plot(data(:,1),volfrac*100,'color',rgb('Black'))
-xlim([xLowLim xUpLim])
-ylabel('\boldmath{$\phi\ (\%)$}')
-xlabel('\boldmath{$\gamma$}')
-ylim([0.2 max(volfrac)*100])
+a = max(volfrac)/min(volfrac);
 
 % number of contacts
 name = ['Number_of_Contacts.txt'];
@@ -77,36 +47,8 @@ end
 data(:,1) = round(data(:,1),1);
 
 % find interval averages
-interval_average(boxstrain,sidex);
-
-% block average
-block = 2;
-npt = floor(length(data)/block);
-B = zeros(npt,1);
-Bt = zeros(npt,1);
-ind = 1;
-for ii=1:block:length(data)-block+1
-    B(ind) = mean(data(ii:ii+block-1,4));
-    Bt(ind) = mean(data(ii:ii+block-1,1));
-    ind = ind + 1;
-end
-minNC = 100;
-maxNC = 0;
-% find maximum and minimum
-if min(B) < minNC
-    minNC = min(B);
-end
-if max(B) > maxNC
-    maxNC = max(B);
-end
-
-subplot(2,1,1)
-yyaxis right
-plot(Bt,B)
-xlim([xLowLim xUpLim])
-ylim([0 maxNC])
-ylabel('$N_C$')
-
+r = intervals(boxstrain,sidex);
+interval_average(data(:,1),data(:,4),r);
 
 % stress
 name = ['Stress_tensor.txt'];
