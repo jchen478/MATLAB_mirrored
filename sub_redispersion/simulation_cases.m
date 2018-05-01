@@ -4,7 +4,7 @@ clear;
 close all;
 
 % path
-dataPath = '../data_redispersion/';
+dataPath = 'data_redispersion/';
 
 % case
 shape = 'theta6';
@@ -19,7 +19,7 @@ kb = 10;
 
 % parameter space
 aArr = [2, 3, 4, 5, 6, 7];
-muArr = [5, 10, 20];
+muArr = [5, 10];
 
 nMu = length(muArr);
 nA = length(aArr); 

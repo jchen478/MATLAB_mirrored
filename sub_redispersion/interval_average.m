@@ -5,9 +5,6 @@ N = length(r); % number of intervals
 interval_stat = zeros(N,2); % average and standard deviation
 index = zeros(N,2); % bracketing index
 
-% round strain to the first decimal point
-strain = round(strain,1); 
-
 % find bracketing index
 index(1,1) = 1;
 n = 1;
