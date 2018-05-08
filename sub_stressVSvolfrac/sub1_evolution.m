@@ -59,7 +59,7 @@ if max(B) > maxNC
 end
 
 plot(Bt,B,'color',rgb('Black'))
-ylim([minNC 0.5])
+% ylim([minNC 0.5])
 ylabel('$N_C$')
 xlabel('$\gamma$')
 

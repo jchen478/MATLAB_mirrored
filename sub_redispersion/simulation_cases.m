@@ -18,8 +18,24 @@ rps = 15;
 kb = 10;
 
 % parameter space
-aArr = [2, 3, 4, 5, 6, 7];
-muArr = [5, 10];
+aArr = [2, 3, 4, 5];
+muArr = [0, 5, 10, 15];
+attArr = [0, 9, 20, 30, 50];
 
 nMu = length(muArr);
 nA = length(aArr); 
+nAtt = length(attArr);
+
+muColorArr = {rgb('Crimson'), rgb('DarkOrange'), ...
+    rgb('DarkGreen'), rgb('MediumBlue')};
+aColorArr = {rgb('Crimson'), rgb('DarkOrange'), ...
+    rgb('DarkGreen'), rgb('MediumBlue')};
+
+muLegend = cell(nMu,1);
+aLegend = cell(nA,1);
+for i=1:nMu
+    muLegend{i} = ['$\mu = $ ',num2str(muArr(i))];
+end
+for i=1:nA
+    aLegend{i} = ['$a = $ ',num2str(aArr(i))];
+end

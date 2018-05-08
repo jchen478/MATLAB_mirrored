@@ -40,10 +40,10 @@ etarel = sigma./gamma;
 se_etarel = se_sigma./gamma;
 
 % Plotting
-figure('Units','Inches','Position',[0.5 4 4.5 3.5])
+figure('Units','Inches','Position',[0.5 4 3.5 3.0])
 hold on
 box on
-title('\boldmath{$\mu_{stat} = 0$}')
+% title('\boldmath{$\mu_{stat} = 0$}')
 plot(nL3,etarel-1,'-x')
 xlabel('$nL^3$')
 ylabel('$\eta_{sp}$')
