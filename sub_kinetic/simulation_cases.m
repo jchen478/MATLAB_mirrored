@@ -4,8 +4,7 @@ clear;
 close all;
 
 % path
-dataPath = 'data_redispersion/';
-% dataPath = 'data_aniso/aniso_';
+dataPath = 'data_kinetic/';
 
 % case
 shape = 'theta6';
@@ -18,22 +17,15 @@ eta0 = 1;           % fluid viscosity (Pa s)
 rps = 15;
 kb = 10;
 
-% parameter space
-aArr = [2, 3, 4, 5];
-muArr = [0, 5, 10, 15];
-% attArr = [0, 9, 20, 30, 50];
-attArr = [0, 9, 20, 50];
-% aniso set
-% aArr = [2, 3, 4, 5];
-% muArr = [0, 5];
-% attArr = [0, 9, 20];
+sidex = 600; 
 
-nMu = length(muArr);
-nA = length(aArr); 
-nAtt = length(attArr);
+% parameter space
+muArr = [15];
+attArr = [0];
+mukinArr = [0 0.2 0.4 0.6 0.8 1.0 5.0];
 
 muC = caseArr('$\mu$',muArr,1);
 attC = caseArr('$A_N$',attArr,2);
-aC = caseArr('$a$',aArr,3);
+mukinC = caseArr('$\mu_{kin}$',mukinArr,3);
 
 

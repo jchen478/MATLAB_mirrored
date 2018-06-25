@@ -5,19 +5,22 @@ clc;
 clear;
 close all;
 
+
+
 % Define common parameters
-% simulation_cases;
-a = 1.60E-05;       % radius (m)
-Imom = pi*a^4/4;    % area moment (m^4)
-EY = 1e9;           % Young's modulus (Pa m^2)
-eta0 = 1;           % fluid viscosity (Pa s)
-nseg = 5;
-rps = 15;
-kb = 10;
+simulation_cases;
+% a = 1.60E-05;       % radius (m)
+% Imom = pi*a^4/4;    % area moment (m^4)
+% EY = 1e9;           % Young's modulus (Pa m^2)
+% eta0 = 1;           % fluid viscosity (Pa s)
+% nseg = 5;
+% rps = 15;
+% kb = 10;
+
+caseName = 'mu0_att50_nL3_20'; 
 
 % plotting commands
 xLowLim = 0;
-
 
 fig = figure('Units','Inches','Position',[1 1 4.5 3.5]);
 left_color = [.5 .5 0];
@@ -25,7 +28,7 @@ right_color = rgb('MediumBlue');
 set(fig,'defaultAxesColorOrder',[left_color; right_color]);
 
 % number of contacts
-name = ['Number_of_Contacts.txt'];
+name = ['data_stressVSvolfrac/theta6_',caseName,'_Number_of_Contacts.txt'];
 File = fopen(name,'r');
 data = fscanf(File,'%f',[5 Inf])';
 fclose(File);
@@ -64,7 +67,7 @@ ylabel('$N_C$')
 xlabel('$\gamma$')
 
 % stress
-name = ['Stress_tensor.txt'];
+name = ['data_stressVSvolfrac/theta6_',caseName,'_Stress_tensor.txt'];
 File = fopen(name,'r');
 data = fscanf(File,'%f',[7 Inf])';
 fclose(File);

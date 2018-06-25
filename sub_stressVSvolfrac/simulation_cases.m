@@ -19,18 +19,22 @@ kb = 10;
 
 % parameter space
 nL3Arr = [20, 40, 60, 80, 100];
-muArr = [0, 5, 10, 20];
+muArr = [0, 5, 10, 15];
+attArr = [0, 9, 20, 50];
+% attArr = [0, 9, 20, 30, 50];
 sidex = [600 476.2 416 378 351];
 
 % volume fraction
 volfracArr = nfib*nseg*2*rps*pi./sidex.^3*100;
 
+% weight percent
+weightfracArr = 1.6*volfracArr;
+
 nMu = length(muArr);
 nNL3 = length(nL3Arr); 
+nAtt = length(attArr); 
 
-% legends
-muLegend = cell(nMu,1);
-
-for i=1:nMu
-    muLegend{i} = ['$\mu = $ ',num2str(muArr(i))];
-end
+muC = caseArr('$\mu$',muArr,1);
+attC = caseArr('$A_N$',attArr,2);
+volfracC = caseArr('$\phi (\%)$',round(volfracArr,2),3);
+weightfracArr = caseArr('$C (w/w\%)$',round(weightfracArr,2),3);

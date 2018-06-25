@@ -8,7 +8,7 @@ sidex = 600;
 sidey = 600;
 sidez = 600; 
 % max conc = a * init conc
-a = 2;
+a = 3;
 % volume change by rate*100% in concentrating
 rate = 0.0005; 
 % write info
@@ -17,11 +17,11 @@ dt=0.0001;
 
 %% calculate strain in each region
 N = ceil(-log(a)/log(1-rate)*dt*box_write); % strain in concentrating or expanding
-region1 = 50;           % low conc steady shear
+region1 = 100;           % low conc steady shear
 region2 = region1+N;  % concentration
-region3 = region2+400;  % high conc steady shear
+region3 = region2+300;  % high conc steady shear
 region4 = region3+N;  % expand
-region5 = region4+200;  % low conc steady shear
+region5 = region4+300;  % low conc steady shear
 gammaTot = region5; 
 
 
@@ -86,10 +86,12 @@ legend('$L_x$','$L_y$','$L_z$')
 xlabel('$\gamma$')
 ylabel('Box length')
 
-figure()
-hold on
-plot(gamma, V/(sidex*sidey*sidez))
-xlabel('$\gamma$')
-ylabel('$V/V_{original}$')
+min(Lx)
+gamma(end)
+% figure()
+% hold on
+% plot(gamma, V/(sidex*sidey*sidez))
+% xlabel('$\gamma$')
+% ylabel('$V/V_{original}$')
 % 
 % gammaTot

@@ -1,19 +1,13 @@
-function [ strain, sigxz_out ] = read_stress( filename )
-%READ_STRESS read Stress_tensor.txt
+function [ strain, MSD ] = read_MSD( filename )
+%READ_NC read Number_of_Contacts.txt
 
 File = fopen(filename,'r');
-data = fscanf(File,'%f',[7 Inf])';
+data = fscanf(File,'%f',[3 Inf])';
 fclose(File);
 
 strain = data(:,1);
-sigxx_out = data(:,2);
-sigyx_out = data(:,3);
-sigxz_out = data(:,4);
-sigyy_out = data(:,5);
-sigyz_out = data(:,6);
-sigzz_out = data(:,7);
-N1_out = sigxx_out-sigzz_out;
-N2_out = sigzz_out-sigyy_out;
+MSD(:,1) = data(:,2);
+MSD(:,2) = data(:,3);
 
 diff = data(2,1) - data(1,1);
 nStep = length(strain);

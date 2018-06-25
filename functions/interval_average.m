@@ -15,9 +15,12 @@ for i=1:length(strain)
             index(n+1,1)=i+1;
         end
         n = n+1;
+        if n > N
+            break;
+        end
     end
 end
-
+% index
 % find averages and standard deviations
 for n=1:N
     interval_stat(n,1) = mean(A(index(n,1):index(n,2)));

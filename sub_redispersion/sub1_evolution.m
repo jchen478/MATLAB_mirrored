@@ -12,8 +12,10 @@ simulation_cases;
 xLowLim = 0;
 
 
-fig = figure('Units','Inches','Position',[1 1 5.0 2.5]);
-left_color = [.5 .5 0];
+% fig = figure('Units','Inches','Position',[1 1 5.0 2.5]);
+fig = figure('Units','Inches','Position',[1 1 4.0 5.5]);
+% left_color = [.5 .5 0];
+left_color = rgb('Black');
 right_color = rgb('MediumBlue');
 set(fig,'defaultAxesColorOrder',[left_color; right_color]);
 
@@ -32,24 +34,24 @@ a = max(volfrac)/min(volfrac)
 
 xUpLim = max(boxstrain);
 
-% subplot(2,1,1)
-% title('\boldmath{$\theta_{eq},\phi_{eq}=0.6,0,\mu = 20, a = 3$}')
+subplot(2,1,1)
 hold on
-% yyaxis left
+title('\boldmath{$\theta_{eq},\phi_{eq}=0.6,0,\mu = 20, a = 3$}')
+yyaxis left
 plot(data(:,1),volfrac*100,'color',rgb('Black'))
 xlim([xLowLim xUpLim])
 ylabel('\boldmath{$\phi\ (\%)$}')
 xlabel('\boldmath{$\gamma$}')
-% ylim([0.2 max(volfrac)*100])
+ylim([0.2 max(volfrac)*100])
 
-% subplot(2,1,2)
-% % yyaxis left
-% hold on
-% plot(data(:,1),volfrac*100,'color',rgb('Black'))
-% xlim([xLowLim xUpLim])
-% ylabel('\boldmath{$\phi\ (\%)$}')
-% xlabel('\boldmath{$\gamma$}')
-% ylim([0.2 max(volfrac)*100])
+subplot(2,1,2)
+yyaxis left
+hold on
+plot(data(:,1),volfrac*100,'color',rgb('Black'))
+xlim([xLowLim xUpLim])
+ylabel('\boldmath{$\phi\ (\%)$}')
+xlabel('\boldmath{$\gamma$}')
+ylim([0.2 max(volfrac)*100])
 
 % number of contacts
 name = ['Number_of_Contacts.txt'];
@@ -85,12 +87,12 @@ if max(B) > maxNC
     maxNC = max(B);
 end
 
-% subplot(2,1,1)
-% yyaxis right
-% plot(Bt,B)
-% xlim([xLowLim xUpLim])
-% ylim([0 maxNC])
-% ylabel('$N_C$')
+subplot(2,1,2)
+yyaxis right
+plot(Bt,B)
+xlim([xLowLim xUpLim])
+ylim([0 maxNC])
+ylabel('$N_C$')
 
 
 % stress
@@ -156,11 +158,9 @@ if max(B) > maxStress
     maxStress = max(B);
 end
 
-% subplot(2,1,2)
-% yyaxis right
-% plot(Bt,B)
-% xlim([xLowLim xUpLim])
-% ylim([minStress maxStress])
-% ylabel('$\sigma_{p,xz} L^4/ E_Y I$')
-% 
-% sub2_average_properties
+subplot(2,1,1)
+yyaxis right
+plot(Bt,B)
+xlim([xLowLim xUpLim])
+ylim([minStress maxStress])
+ylabel('$\sigma_{p,xz} L^4/ E_Y I$')

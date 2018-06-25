@@ -1,15 +1,12 @@
-function [ strain, NC ] = read_NC( filename )
+function [ strain, Eelastic ] = read_elastic( filename )
 %READ_NC read Number_of_Contacts.txt
 
 File = fopen(filename,'r');
-data = fscanf(File,'%f',[5 Inf])';
+data = fscanf(File,'%f',[4 Inf])';
 fclose(File);
 
 strain = data(:,1);
-num_groups = data(:,2);
-total_contacts = data(:,3);
-NC = data(:,4);
-overlap = data(:,5);
+Eelastic = data(:,4);
 
 diff = data(2,1) - data(1,1);
 nStep = length(strain);
