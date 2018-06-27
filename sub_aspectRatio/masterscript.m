@@ -8,7 +8,7 @@ close all;
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 simulation_cases;
 
-basisStrain = 510;
+basisStrain = 1000;
 
 nMu = mu.ndata; 
 nRp = rp.ndata;

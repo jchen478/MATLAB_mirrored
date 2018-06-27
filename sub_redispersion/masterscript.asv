@@ -82,11 +82,11 @@ for i=1:nMu
             forc =contact(:,4);
             sij =contact(:,5);
             
-            NC_total_stat = interval_average(Con_strain,NC_total,r);
-            NC_total_no_joints_stat = interval_average(Con_strain,NC_total_no_joints,r);
-            overlap_stat = interval_average(Con_strain,overlap,r);
-            forc_stat = interval_average(Con_strain,forc,r);
-            sij_stat = interval_average(Con_strain,sij,r);
+            NC_total_stat = interval_average(Con_strain,NC_total,r');
+            NC_total_no_joints_stat = interval_average(Con_strain,NC_total_no_joints,r');
+            overlap_stat = interval_average(Con_strain,overlap,r');
+            forc_stat = interval_average(Con_strain,forc,r');
+            sij_stat = interval_average(Con_strain,sij,r');
             
             NC_total_statDataB(i,k) = NC_total_stat(2,1);
             NC_total_no_jointsDataB(i,k) = NC_total_no_joints_stat(2,1);
@@ -99,7 +99,7 @@ for i=1:nMu
         if (exist([filePrefix,'Eelastic.txt'], 'file') ~= 0)
             [Eelas_strain, Eelas_nondim] = read_elastic([filePrefix,'Eelastic.txt']);
             r = [basisStrain  Eelas_strain(end)]';
-            Eelas_stat = interval_average(Eelas_strain,Eelas_nondim,r);
+            Eelas_stat = interval_average(Eelas_strain,Eelas_nondim,r');
             EelasDataB(i,k) = Eelas_stat(2,1);
         end
         
@@ -107,7 +107,7 @@ for i=1:nMu
         if (exist([filePrefix,'Intensity.txt'], 'file') ~= 0)
             [I_strain, I] = read_intensity([filePrefix,'Intensity.txt']);
             r = [basisStrain  I_strain(end)]';
-            I_stat = interval_average(I_strain,I,r);
+            I_stat = interval_average(I_strain,I,r');
             IDataB(i,k) = I_stat(2,1);
             
         end
@@ -307,20 +307,12 @@ plot3dim(IData,EelasData,'$I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,muC,at
 % plot3dim(IData,EelasData,'$I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',muC,attC,aC)
 % plot3dim(IData,EelasData,'$I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,muC,attC)
 
-% plot3dim(DIData,IData,'$\Delta I$','$I$',attC,muC,aC)
-% plot3dim(DIData,IData,'$\Delta I$','$I$',aC,attC,muC)
-% plot3dim(DIData,IData,'$\Delta I$','$I$',attC,aC,muC)
-% plot3dim(DIData,IData,'$\Delta I$','$I$',muC,aC,attC)
-% plot3dim(DIData,IData,'$\Delta I$','$I$',muC,attC,aC)
-% plot3dim(DIData,IData,'$\Delta I$','$I$',aC,muC,attC)
-
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',attC,muC,aC)
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,attC,muC)
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',attC,aC,muC)
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',muC,aC,attC)
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',muC,attC,aC)
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,muC,attC)
-
+plot3dim(IData,IData,'$\I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',attC,muC,aC)
+plot3dim(IData,IData,'$I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,attC,muC)
+plot3dim(IData,IData,'$I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',attC,aC,muC)
+plot3dim(IData,IData,'$I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',muC,aC,attC)
+plot3dim(IData,IData,'$I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',muC,attC,aC)
+plot3dim(IData,IData,'$I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,muC,attC)
 % Phase diagram with interfiber forces
 %{
 muC.name = '$\mu_{stat}$';

@@ -18,15 +18,21 @@ classdef caseArr
                 obj.value = valueInput;
                 obj.ndata = length(obj.value);
                 obj.legend = cell(obj.ndata,1);
-                for i=1:obj.ndata
-                    obj.legend{i} = [obj.name,' = ', num2str(obj.value(i))];
+                if (isnumeric(valueInput))
+                    for i=1:obj.ndata
+                        obj.legend{i} = [obj.name,' = ', num2str(obj.value(i))];
+                    end
+                elseif (iscell(valueInput))
+                    for i=1:obj.ndata
+                        obj.legend{i} = ['case ', obj.value{i}];
+                    end
                 end
             end
         end
         function obj = pluck(obj,ind)
             obj.value(ind) = [];
             obj.legend(ind) = [];
-            obj.ndata = obj.ndata - 1; 
+            obj.ndata = obj.ndata - 1;
         end
     end
     

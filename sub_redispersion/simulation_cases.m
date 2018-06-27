@@ -17,6 +17,7 @@ EY = 1e9;           % Young's modulus (Pa m^2)
 eta0 = 1;           % fluid viscosity (Pa s)
 rps = 15;
 kb = 10;
+sidex = 600; 
 
 % parameter space
 aArr = [2, 3, 4, 5];
