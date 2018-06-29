@@ -1,4 +1,4 @@
-%% analysis for redispersion
+%% analysis for redispersion - includes rheology, contacts, elastic energy
 clc;
 clear;
 close all;
@@ -219,6 +219,16 @@ DsijData = zeros(nMu,nAtt,nA);
 DEelasData = zeros(nMu,nAtt,nA);
 DIData = zeros(nMu,nAtt,nA);
 
+etaData (etaData == 0) = NaN;
+NCData (NCData == 0) = NaN;
+NC_total_statData (NC_total_statData == 0) = NaN;
+NC_total_no_jointsData (NC_total_no_jointsData == 0) = NaN;
+overlapData (overlapData == 0) = NaN;
+forcData (forcData == 0) = NaN;
+sijData (sijData == 0) = NaN;
+EelasData (EelasData == 0) = NaN;
+IData (IData == 0) = NaN;
+
 for i=1:nA
     DetaData(:,:,i) = etaData(:,:,i) - etaDataB;
     DNCData(:,:,i) = NCData(:,:,i) - NCDataB;
@@ -230,41 +240,11 @@ for i=1:nA
     DEelasData(:,:,i) = EelasData(:,:,i) - EelasDataB;
     DIData(:,:,i) = IData(:,:,i) - IDataB;
 end
-%% Remove unfinished cases
-% DetaData(:,4,:) = [];
-% DNCData(:,4,:) = [];
-% attC = pluck(attC,4);
 
-% % mu0 att30
-% DetaData(1,4,:) = NaN;
-% DNCData(1,4,:) = NaN;
-%
-% % mu15 att20 a5
-% DetaData(4,3,4) = NaN;
-% DNCData(4,3,4) = NaN;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Part IV - plotting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% DetaData(4,3,4) = 0.5*(DetaData(4,2,4) + DetaData(4,4,4));
-% DNCData(4,3,4) = 0.5*(DNCData(4,2,4) + DNCData(4,4,4));
-
-etaData (etaData == 0) = NaN;
-NCData (NCData == 0) = NaN;
-NC_total_statData (NC_total_statData == 0) = NaN;
-NC_total_no_jointsData (NC_total_no_jointsData == 0) = NaN;
-overlapData (overlapData == 0) = NaN;
-forcData (forcData == 0) = NaN;
-sijData (sijData == 0) = NaN;
-EelasData (EelasData == 0) = NaN;
-IData (IData == 0) = NaN;
-
-DetaData (DetaData == 0) = NaN;
-DNCData (DNCData == 0) = NaN;
-DNC_total_statData (DNC_total_statData == 0) = NaN;
-DNC_total_no_jointsData (DNC_total_no_jointsData == 0) = NaN;
-DoverlapData (DoverlapData == 0) = NaN;
-DforcData (DforcData == 0) = NaN;
-DsijData (DsijData == 0) = NaN;
-DEelasData (DEelasData == 0) = NaN;
-DIData (DIData == 0) = NaN;
 
 %% plots
 % Differences
@@ -307,32 +287,29 @@ plot3dim(IData,EelasData,'$I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,muC,at
 % plot3dim(IData,EelasData,'$I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',muC,attC,aC)
 % plot3dim(IData,EelasData,'$I$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,muC,attC)
 
-% plot3dim(DIData,IData,'$\Delta I$','$I$',attC,muC,aC)
-% plot3dim(DIData,IData,'$\Delta I$','$I$',aC,attC,muC)
-% plot3dim(DIData,IData,'$\Delta I$','$I$',attC,aC,muC)
-% plot3dim(DIData,IData,'$\Delta I$','$I$',muC,aC,attC)
-% plot3dim(DIData,IData,'$\Delta I$','$I$',muC,attC,aC)
-% plot3dim(DIData,IData,'$\Delta I$','$I$',aC,muC,attC)
+plot3dim(DIData,IData,'$\Delta I$','$I$',attC,muC,aC)
+plot3dim(DIData,IData,'$\Delta I$','$I$',aC,attC,muC)
+plot3dim(DIData,IData,'$\Delta I$','$I$',attC,aC,muC)
+plot3dim(DIData,IData,'$\Delta I$','$I$',muC,aC,attC)
+plot3dim(DIData,IData,'$\Delta I$','$I$',muC,attC,aC)
+plot3dim(DIData,IData,'$\Delta I$','$I$',aC,muC,attC)
 
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',attC,muC,aC)
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,attC,muC)
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',attC,aC,muC)
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',muC,aC,attC)
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',muC,attC,aC)
-plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,muC,attC)
+% plot3dim(DfData,fData,'$\Delta f$','$f$',attC,muC,aC)
+% plot3dim(DfData,fData,'$\Delta f$','$f$',aC,attC,muC)
+% plot3dim(DfData,fData,'$\Delta f$','$f$',attC,aC,muC)
+% plot3dim(DfData,fData,'$\Delta f$','$f$',muC,aC,attC)
+% plot3dim(DfData,fData,'$\Delta f$','$f$',muC,attC,aC)
+% plot3dim(DfData,fData,'$\Delta f$','$f$',aC,muC,attC)
+
+% plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',attC,muC,aC)
+% plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,attC,muC)
+% plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',attC,aC,muC)
+% plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',muC,aC,attC)
+% plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',muC,attC,aC)
+% plot3dim(DEelasData,EelasData,'$\Delta E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$','$E_{elas}/ 8\pi\eta_0\dot{\gamma}l^3$',aC,muC,attC)
 
 % Phase diagram with interfiber forces
 %{
 muC.name = '$\mu_{stat}$';
 plotPhase(DetaData,'$\Delta \eta_{rel}$',attC,muC,aC,0)
-
-%}
-% Contact Statistics
-%{
-plot3dim(NC_total_no_jointsData,forcData,'$<N_C>$ (Unbroken, No Joints)','$<F_{tot}>$',attC,muC,aC)
-plot3dim(NC_total_no_jointsData,forcData,'$<N_C>$ (Unbroken, No Joints)','$<F_{tot}>$',aC,attC,muC)
-plot3dim(NC_total_no_jointsData,forcData,'$<N_C>$ (Unbroken, No Joints)','$<F_{tot}>$',attC,aC,muC)
-plot3dim(NC_total_no_jointsData,forcData,'$<N_C>$ (Unbroken, No Joints)','$<F_{tot}>$',muC,aC,attC)
-plot3dim(NC_total_no_jointsData,forcData,'$<N_C>$ (Unbroken, No Joints)','$<F_{tot}>$',muC,attC,aC)
-plot3dim(NC_total_no_jointsData,forcData,'$<N_C>$ (Unbroken, No Joints)','$<F_{tot}>$',aC,muC,attC)
 %}

@@ -18,6 +18,7 @@ eta0 = 1;           % fluid viscosity (Pa s)
 rps = 15;
 kb = 10;
 sidex = 600; 
+volfrac = 2*pi*rps*nseg*nfib/sidex^3; 
 
 % parameter space
 aArr = [2, 3, 4, 5];
