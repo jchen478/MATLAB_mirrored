@@ -9,6 +9,9 @@ close all;
 simulation_cases;
 basisStrain = 1000;
 IData = zeros(nMu,nAtt,nA);
+nClusterData = zeros(nMu,nAtt,nA);
+SData = zeros(nMu,nAtt,nA);
+flocEData = zeros(nMu,nAtt,nA);
 IDataB = zeros(nMu,nAtt);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -41,6 +44,9 @@ for i=1:nMu
             r = round(intervals(box_strain,sidex),0)';
             % intensity energy statistics
             IData(i,k,j) = process_intensity(filePrefix, basisStrain, 5, r);
+            % number of clusters
+            [nClusterData(i,k,j), SData(i,k,j), flocEData(i,k,j)] = process_cluster(filePrefix);
+            
         end
     end
 end
@@ -56,11 +62,18 @@ for i=1:nA
 end
 
 IDataObj = data3D('$I$',IData); 
+SDataObj = data3D('$<S>$',SData); 
+flocEDataObj = data3D('$E_{floc}$',flocEData);
 DIDataObj = data3D('$\Delta I$',DIData);
+nClusterDataObj = data3D('$N_{cluster}$',nClusterData);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part IV - plotting
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% intensity
-plot3dim1(IDataObj,attC,muC,aC); 
-plot3dim2(DIDataObj,IDataObj,attC,muC,aC)
+plot3dim1(nClusterDataObj,attC,muC,aC); 
+plot3dim1(nClusterDataObj,aC,attC,muC); 
+plot3dim1(nClusterDataObj,muC,attC,aC); 
+plot3dim1(SDataObj,muC,attC,aC); 
+plot3dim1(flocEDataObj,muC,attC,aC); 
+% plot3dim2(DIDataObj,IDataObj,attC,muC,aC)
