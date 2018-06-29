@@ -1,0 +1,11 @@
+function [ output_args ] = process_intensity( filePrefix, basisStrain, IData, ithStat )
+%PROCESS_INTENSITY Find stats for intensity
+if (exist([filePrefix,'Intensity.txt'], 'file') ~= 0)
+    [I_strain, I] = read_intensity([filePrefix,'Intensity.txt']);
+    r = [basisStrain  I_strain(end)]';
+    I_stat = interval_average(I_strain,I,r);
+    IDataB(i,k) = I_stat(2,1);
+end
+
+end
+
