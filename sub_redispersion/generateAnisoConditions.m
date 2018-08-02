@@ -1,6 +1,6 @@
-clc;
-clear;
-close all;
+% clc;
+% clear;
+% close all;
 
 %% input from file
 % initial box
@@ -9,7 +9,7 @@ sidey = 600;
 sidez = 600;
 
 % max conc = a * init conc
-a = 2;
+a = 5;
 % volume change by rate*100% in concentrating
 rate = 0.0005;
 % write info
@@ -166,40 +166,60 @@ for s=1:length(gamma)+1
 end
 V = Lx.*Ly.*Lz;
 
-figure()
-hold on
-plot(gamma, Lx)
-plot(gamma, Ly)
-plot(gamma, Lz)
-legend('$L_x$','$L_y$','$L_z$')
-xlabel('$\gamma$')
-ylabel('Box length')
-
-figure()
-hold on
-plot(gamma, V/(sidex*sidey*sidez))
-xlabel('$\gamma$')
-ylabel('$V/V_{original}$')
+% figure()
+% hold on
+% plot(gamma, Lx)
+% plot(gamma, Ly)
+% plot(gamma, Lz)
+% legend('$L_x$','$L_y$','$L_z$')
+% xlabel('$\gamma$')
+% ylabel('Box length')
+% 
+% figure()
+% hold on
+% plot(gamma, V/(sidex*sidey*sidez))
+% xlabel('$\gamma$')
+% ylabel('$V/V_{original}$')
 %
 % gammaTot
 
-figure
-hold on
-plot(gamma, binx)
-plot(gamma, biny)
-plot(gamma, binz)
-xlabel('$\gamma$')
-ylabel('$N_{bin}$')
-legend('$N_x$','$N_y$','$N_z$')
-
-figure
-hold on
-plot(gamma, binx.*biny.*binz/(nxbinMax*nybinMax*nzbinMax))
-xlabel('$\gamma$')
-ylabel('$N_{bin}^3 / N_{bin,max}^3$')
+% figure
+% hold on
+% plot(gamma, binx)
+% plot(gamma, biny)
+% plot(gamma, binz)
+% xlabel('$\gamma$')
+% ylabel('$N_{bin}$')
+% legend('$N_x$','$N_y$','$N_z$')
+% 
+% figure
+% hold on
+% plot(gamma, binx.*biny.*binz/(nxbinMax*nybinMax*nzbinMax))
+% xlabel('$\gamma$')
+% ylabel('$N_{bin}^3 / N_{bin,max}^3$')
 
 if max(binx.*biny.*binz/(nxbinMax*nybinMax*nzbinMax)) > 1
     display('Error')
 else
     display('This condition works')
 end
+
+volfrac = 1280*150*pi./(Lx.*Ly.*Lz);
+
+% figure('Units','Inches','Position',[1 1 3.5 2.2]);
+hold on
+plot(gamma, volfrac*100)
+% plot(gamma, volfrac*100,'color',rgb('black'))
+% legend('$r_{\phi}=4$')
+xlim([0 max(gamma)])
+xlabel('$\gamma$')
+ylabel('$\phi\ \%$')
+
+% figure('Units','Inches','Position',[1 1 5.0 2.5]);
+% hold on
+% plot(gamma, volfrac*100,'color',rgb('black'))
+% % legend('$r_{\phi}=4$')
+% xlim([0 max(gamma)])
+% xlabel('$\gamma$')
+% ylabel('$\phi\ \%$')
+% 

@@ -7,7 +7,7 @@ pdata1 = permute(data1,[x.dim y.dim z.dim]);
 
 %% create corresponding legend array
 for k=1:length(z.value)
-    figure('Units','Inches','Position',[1 1 3.2 3.0]);
+    figure('Units','Inches','Position',[1 1 2.5 2.5]);
     set(gcf,'name',z.legend{k})
     for j=1:length(y.value)
         
@@ -37,7 +37,7 @@ for k=1:length(z.value)
             legend(legendArr,'location','best')
         end
     end
-%     title(z.legend{k})
+    title(z.legend{k})
     xlabel(x.name)
     ylabel(y.name)
 end

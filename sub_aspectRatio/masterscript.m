@@ -16,14 +16,26 @@ nAtt = att.ndata;
 
 etaData = zeros(nRp,nMu,nAtt);
 NCData = zeros(nRp,nMu,nAtt);
-etaBasisData = zeros(nRp,nMu,nAtt);
-NCBasisData = zeros(nRp,nMu,nAtt);
-DetaData = zeros(nRp,nMu,nAtt);
-DNCData = zeros(nRp,nMu,nAtt);
+NC_total_statData = zeros(nRp,nMu,nAtt);
+NC_total_no_jointsData = zeros(nRp,nMu,nAtt);
+overlapData = zeros(nRp,nMu,nAtt);
+forcData = zeros(nRp,nMu,nAtt);
+sijData = zeros(nRp,nMu,nAtt);
+EelasData = zeros(nRp,nMu,nAtt);
+
+etaDataB = zeros(nRp,nMu,nAtt);
+NCDataB = zeros(nRp,nMu,nAtt);
+NC_total_statDataB = zeros(nRp,nMu,nAtt);
+NC_total_no_jointsDataB = zeros(nRp,nMu,nAtt);
+overlapDataB = zeros(nRp,nMu,nAtt);
+forcDataB = zeros(nRp,nMu,nAtt);
+sijDataB = zeros(nRp,nMu,nAtt);
+EelasDataB = zeros(nRp,nMu,nAtt);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part I - obtain basis 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
+r = 0;
 for i=1:nRp
     for j=1:nMu
         for k=1:nAtt
@@ -31,63 +43,22 @@ for i=1:nRp
                  num2str(rp.value(i)),...
                  ' mu', num2str(mu.value(j)),...
                  ' att',num2str(att.value(k))])
-             filePrefix = [dataPath,shape,'_basis_rp',...
+             filePrefix = [dataPathBasis,shape,'_rp',...
                  num2str(rp.value(i)),...
-                 '_mu',num2str(mu.value(j)),...
+                 '_basis_mu',num2str(mu.value(j)),...
                  '_att',num2str(att.value(k)),'_'];
-            % read input and process data
-            if exist([filePrefix,'Stress_tensor.txt'], 'file')
-                s = dir([filePrefix,'Stress_tensor.txt']);
-                if s.bytes == 0
-                    continue;
-                end
-                [stress_strain, sigxz_out] = read_stress([filePrefix,'Stress_tensor.txt']);
-                [NC_strain, NC] = read_NC([filePrefix,'Number_of_Contacts.txt']);
-            else
-                continue;
-            end
-            % find relevant parameters for stress calculations
-            nPt = length(stress_strain);
-            [Seff,rpdum,nL3,L,gamma] = pCalc(nfib*ones(nPt,1),...
-                nseg*ones(nPt,1), rps.value(i), kb.value(i),...
-                sidex*ones(nPt,1), a, EY, Imom, eta0);
-            
-            % Dimensionalize stresses
-            [sigmap,sigma, std_sigmap, std_sigma, N1, N2] = ...
-                stressDim(sigxz_out, zeros(nPt,1), zeros(nPt,1), ...
-                zeros(nPt,1), nseg, rps.value(i), eta0, gamma, nL3);
-            
-            % Calculate viscosity
-            etarel = sigma./gamma;
-            
-            % Non-dimensionalize
-            sigmap_nondim = sigmap.*L.^4/EY/Imom;
-            
-            if NC_strain(end) >= basisStrain
-                r = [basisStrain  NC_strain(end)]';
-                NC_stat = interval_average(NC_strain,NC,r);
-                sigmap_nondim_stat = interval_average(stress_strain,sigmap_nondim,r);
-                eta_stat = interval_average(stress_strain,etarel,r);
-                etaBasisData(i,j,k) = eta_stat(2,1);
-                NCBasisData(i,j,k) = NC_stat(2,1);
-            else
-                NC_strain(end)
-            end
+             
+             %% read input and process data
+             [r, etaDataB(i,j,k)] = process_stress_lbox_eta_basis(filePrefix, basisStrain, 2, sidex, nfib.value(i), nseg, rps.value(i), kb.value(i), a, EY, Imom, eta0);
+             % number of contacts
+             NCDataB(i,j,k) = process_NC(filePrefix, basisStrain, 2, r');
+             % contact statistics
+             [NC_total_statDataB(i,j,k), NC_total_no_jointsDataB(i,j,k), overlapDataB(i,j,k),forcDataB(i,j,k),sijDataB(i,j,k)] = process_contactStat(filePrefix, basisStrain, 2, r');
+             % elastic energy statistics
+             EelasDataB(i,j,k) = process_elastic(filePrefix, basisStrain, 2, r');
         end
     end
 end
-
-%% plots
-% 1. Rheology
-%{
-plot3dim(etaBasisData,NCBasisData,'$\eta_{app}/\eta_0$','$N_C$',att,mu,rp)
-plot3dim(etaBasisData,NCBasisData,'$\eta_{app}/\eta_0$','$N_C$',rp,att,mu)
-plot3dim(etaBasisData,NCBasisData,'$\eta_{app}/\eta_0$','$N_C$',att,rp,mu)
-plot3dim(etaBasisData,NCBasisData,'$\eta_{app}/\eta_0$','$N_C$',mu,rp,att)
-plot3dim(etaBasisData,NCBasisData,'$\eta_{app}/\eta_0$','$N_C$',mu,att,rp)
-plot3dim(etaBasisData,NCBasisData,'$\eta_{app}/\eta_0$','$N_C$',rp,mu,att)
-%}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part II - obtain redispersed value
@@ -101,69 +72,54 @@ for i=1:nRp
                 ' att',num2str(att.value(k))])
             filePrefix = [dataPath,shape,'_rp',...
                 num2str(rp.value(i)),...
-                '_mu',num2str(mu.value(j)),...
+                '_rand_shear_shear_mu',num2str(mu.value(j)),...
                 '_att',num2str(att.value(k)),'_a3_'];
             
-            %% read input and process data
-            if (exist([filePrefix,'Stress_tensor.txt'], 'file') == 0)
-                continue;
-            end
-            [stress_strain, sigxz_out] = read_stress([filePrefix,'Stress_tensor.txt']);
-            [box_strain, sidex] = read_box([filePrefix,'Lbox.txt']);
-            [NC_strain, NC] = read_NC([filePrefix,'Number_of_Contacts.txt']);
+            %% read input and process dat
+            % viscosity
+            [r, etaData(i,j,k)] = process_stress_lbox_eta(filePrefix, 5, sidex, nfib.value(i), nseg, rps.value(i), kb.value(i), a, EY, Imom, eta0);
+            % number of contacts
+            NCData(i,j,k) = process_NC(filePrefix, basisStrain, 5, r');
+            % contact statistics
+            [NC_total_statData(i,j,k), NC_total_no_jointsData(i,j,k), overlapData(i,j,k),forcData(i,j,k),sijData(i,j,k)] = process_contactStat(filePrefix, basisStrain, 5, r');
+            % elastic energy statistics
+            EelasData(i,j,k) = process_elastic(filePrefix, basisStrain, 5, r');
             
-            % define lboxArr to calculate stress
-            lboxArr = find_lboxArr(stress_strain, box_strain, sidex);
-                     
-            % find relevant parameters for stress calculations
-            nPt = length(stress_strain);
-            [Seff,rpdum,nL3,L,gamma] =...
-                pCalc(nfib*ones(nPt,1), nseg*ones(nPt,1), ...
-                rps.value(i), kb.value(i), lboxArr, a, EY, Imom, eta0);
-            
-            % Dimensionalize stresses
-            [sigmap,sigma, std_sigmap, std_sigma, N1, N2] = ...
-                stressDim(sigxz_out, zeros(nPt,1), zeros(nPt,1), ...
-                zeros(nPt,1), nseg, rps.value(i), eta0, gamma, nL3);
-            
-            etarel = sigma./gamma;
-            % Non-dimensionalize
-            sigmap_nondim = sigmap.*L.^4/EY/Imom;    
-            
-            %% calculate interval averages
-            r = round(intervals(box_strain,sidex),0);
-            
-            % if simulation has not finished
-            if round(stress_strain(end),1) ~= round(box_strain(end),1)
-                stress_strain(end)
-                box_strain(end)
-                continue;
-            end
-            
-            NC_stat = interval_average(NC_strain,NC,r');
-            sigmap_nondim_stat = interval_average(stress_strain,sigmap_nondim,r');
-            eta_stat = interval_average(stress_strain,etarel,r');
-            
-            etaData(i,j,k) = eta_stat(5,1);
-            NCData(i,j,k) = NC_stat(5,1);
-            
-            if (etaBasisData(i,j,k) ~= 0)
-                DetaData(i,j,k) = etaData(i,j,k)-etaBasisData(i,j,k);
-                DNCData(i,j,k) = NCData(i,j,k)-NCBasisData(i,j,k);
-            end
         end
     end
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Part III - calculate property difference due to redispersion cycle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+etaData (etaData == 0) = NaN;
+NCData (NCData == 0) = NaN;
+NC_total_statData (NC_total_statData == 0) = NaN;
+NC_total_no_jointsData (NC_total_no_jointsData == 0) = NaN;
+overlapData (overlapData == 0) = NaN;
+forcData (forcData == 0) = NaN;
+sijData (sijData == 0) = NaN;
+EelasData (EelasData == 0) = NaN;
+
+EelasDataB (EelasDataB == 0) = NaN;
+
+DetaData = etaData - etaDataB;
+DNCData = NCData - NCDataB;
+DNC_total_statData = NC_total_statData - NC_total_statDataB;
+DNC_total_no_jointsData = NC_total_no_jointsData - NC_total_no_jointsDataB;
+DoverlapData = overlapData - overlapDataB;
+DforcData = forcData - forcDataB;
+DsijData = sijData - sijDataB;
+DEelasData = EelasData - EelasDataB;
+
 %% plots
 DetaData (DetaData == 0) = nan; 
 DNCData (DNCData == 0) = nan; 
-% Differences
-%%{
-plot3dim(DetaData,DNCData,'$\Delta (\eta_{app}/\eta_0)$','$\Delta N_C$',att,mu,rp)
-% plot3dim(DetaData,DNCData,'$\Delta (\eta_{app}/\eta_0)$','$\Delta N_C$',rp,att,mu)
-plot3dim(DetaData,DNCData,'$\Delta (\eta_{app}/\eta_0)$','$\Delta N_C$',att,rp,mu)
-% plot3dim(DetaData,DNCData,'$\Delta (\eta_{app}/\eta_0)$','$\Delta N_C$',mu,rp,att)
-% plot3dim(DetaData,DNCData,'$\Delta (\eta_{app}/\eta_0)$','$\Delta N_C$',mu,att,rp)
-% plot3dim(DetaData,DNCData,'$\Delta (\eta_{app}/\eta_0)$','$\Delta N_C$',rp,mu,att)
-%}
+
+etaDataObj = data3D('$\eta/\eta_0$',etaData);
+DetaDataObj = data3D('$\Delta \eta/\eta_0$',DetaData);
+
+plot3dim1(etaDataObj,att,mu,rp); 
+plot3dim1(DetaDataObj,att,mu,rp);
+plot3dim1(etaDataObj,att,rp,mu); 
+plot3dim1(DetaDataObj,att,rp,mu);

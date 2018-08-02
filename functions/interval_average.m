@@ -21,10 +21,13 @@ for i=1:length(strain)
     end
 end
 % index
-% find averages and standard deviations
+% find averages and standard error of the mean
 for n=1:N
     interval_stat(n,1) = mean(A(index(n,1):index(n,2)));
-    interval_stat(n,2) = std(A(index(n,1):index(n,2)));
+    % standard error of the mean
+    interval_stat(n,2) = std(A(index(n,1):index(n,2)))/sqrt(length(A(index(n,1):index(n,2))));
+    % standard deviation
+%     interval_stat(n,2) = std(A(index(n,1):index(n,2)));
 end
 
 end

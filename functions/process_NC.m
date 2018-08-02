@@ -14,6 +14,9 @@ if (exist([filePrefix,'Number_of_Contacts.txt'], 'file') ~= 0)
     if (NC_strain(end) <= basisStrain)
         return
     end
+    if NC_strain(end) < r(end)
+        return
+    end
     NC_stat = interval_average(NC_strain,NCread,r);
     NC = NC_stat(ithStat,1);
 end

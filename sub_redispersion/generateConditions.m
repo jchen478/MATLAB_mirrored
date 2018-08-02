@@ -77,21 +77,21 @@ for s=1:length(gamma)+1
 end
 V = Lx.*Ly.*Lz;
 
-figure()
-hold on
-plot(gamma, Lx)
-plot(gamma, Ly)
-plot(gamma, Lz)
-legend('$L_x$','$L_y$','$L_z$')
-xlabel('$\gamma$')
-ylabel('Box length')
+% figure()
+% hold on
+% plot(gamma, Lx)
+% plot(gamma, Ly)
+% plot(gamma, Lz)
+% legend('$L_x$','$L_y$','$L_z$')
+% xlabel('$\gamma$')
+% ylabel('Box length')
 
 min(Lx)
 gamma(end)
-% figure()
-% hold on
-% plot(gamma, V/(sidex*sidey*sidez))
-% xlabel('$\gamma$')
-% ylabel('$V/V_{original}$')
-% 
+figure()
+hold on
+plot(gamma, V/(sidex*sidey*sidez))
+xlabel('$\gamma$')
+ylabel('$V/V_{original}$')
+
 % gammaTot
