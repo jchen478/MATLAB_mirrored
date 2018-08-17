@@ -29,14 +29,9 @@ kb = caseArr('$k_b$',[50.625 10 ],4);
 rps = caseArr('$r_{ps}$',[10 15 ],4);
 rp = caseArr('$r_p$',[50 75 ],1);
 mu = caseArr('$\mu$',[5 10 15],2);
-att = caseArr('$A_N$',[0 9 20 30 50],3);
+att = caseArr('$A_N$',[0 9 20 30 35 50],3);
 
 % mu = caseArr('$\mu$',[0 5 10 15],2);
 % att = caseArr('$A_N$',[0 9 20 30 50],3);
-
-
-
-
-
 
 

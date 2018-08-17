@@ -20,5 +20,14 @@ if (exist([filePrefix,'Number_of_Contacts.txt'], 'file') ~= 0)
     NC_stat = interval_average(NC_strain,NCread,r);
     NC = NC_stat(ithStat,1);
 end
+if (exist([filePrefix,'extra_Number_of_Contacts.txt'], 'file') ~= 0)
+    [NC_strain_extra, NCread_extra] = read_NC([filePrefix,'extra_Number_of_Contacts.txt']);
+%     figure()
+%     hold on
+%     title(['extra_',filePrefix,'Number_of_Contacts.txt'])
+%     plot(NC_strain, NCread);
+%     xlabel('$\gamma$')
+%     ylabel('$N_C$')
+end
 end
 

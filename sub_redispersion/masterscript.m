@@ -37,6 +37,9 @@ etaDataBE = zeros(nMu,nAtt);
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 r = 0;
 for i=1:nMu
+%     figure('Units','Inches','Position',[1 1 3.0 2.5]);
+%     hold on
+%     title(['Basis: $\mu$ ',num2str(muC.value(i))])
     for k=1:nAtt
         display(['Processing basis mu',num2str(muArr(i)),'_att',num2str(attArr(k))]);
         filePrefix = [dataPathBasis,shape,'_rp75_basis_mu',num2str(muArr(i)),'_att',num2str(attArr(k)),'_'];
@@ -47,20 +50,28 @@ for i=1:nMu
         % contact statistics
         [NC_total_statDataB(i,k), NC_total_no_jointsDataB(i,k), overlapDataB(i,k),forcDataB(i,k),sijDataB(i,k)] = process_contactStat(filePrefix, basisStrain, 2, r');
         % elastic energy statistics
-        EelasDataB(i,k) = process_elastic(filePrefix, basisStrain, 2, r'); 
+        EelasDataB(i,k) = process_elastic(filePrefix, basisStrain, 2, r');
     end
+%     legend(attC.legend)
+%     ylabel('$\eta/\eta_0$')
+%     set(gca,'yscale','log')
+%     xlabel('$\gamma$')
 end
 
-%%
+%{
 etaDataB (etaDataB == 0) = NaN;
 etaDataBObj = data3D('Basis $\eta/\eta_0$',etaDataB);
-plot2dim1(etaDataBObj,attC,muC); 
-plot2dim1EB(etaDataBObj,etaDataBE,attC,muC); 
+plot2dim1(etaDataBObj,attC,muC);
+plot2dim1EB(etaDataBObj,etaDataBE,attC,muC);
+%}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part II - obtain redispersed value
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for i=1:nMu
+%     figure('Units','Inches','Position',[1 1 3.0 2.5]);
+%     hold on
+%     title(['Redispersed: $(\mu,r_{\phi})$ (',num2str(muC.value(i)),',4)'])
     for k=1:nAtt
         for j=1:nA
             display(['Processing mu',num2str(muArr(i)),'_att',num2str(attArr(k)),'_a',num2str(aArr(j))])
@@ -76,11 +87,16 @@ for i=1:nMu
             EelasData(i,k,j) = process_elastic(filePrefix, basisStrain, 5, r');
         end
     end
+%     legend(attC.legend)
+%     ylabel('$\eta/\eta_0$')
+%     set(gca,'yscale','log')
+%     xlabel('$\gamma$')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part III - calculate property difference due to redispersion cycle
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%{
 DetaData = zeros(nMu,nAtt,nA);
 DNCData = zeros(nMu,nAtt,nA);
 DNC_total_statData = zeros(nMu,nAtt,nA);
@@ -113,20 +129,21 @@ for i=1:nA
 end
 
 %%
-etaDataObj = data3D('$\eta/\eta_0$',etaData);
-DetaDataObj = data3D('$\Delta \eta/\eta_0$',DetaData);
-EelasDataObj = data3D('$E_{el}$',EelasData);
-DEelasDataObj = data3D('$\Delta E_{el}$',DEelasData);
+% etaDataObj = data3D('$\eta/\eta_0$',etaData);
+% DetaDataObj = data3D('$\Delta \eta/\eta_0$',DetaData);
+% EelasDataObj = data3D('$E_{el}$',EelasData);
+% DEelasDataObj = data3D('$\Delta E_{el}$',DEelasData);
+%}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part IV - plotting
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% plot3dim1(etaDataObj,attC,muC,aC); 
-plot3dim1(DetaDataObj,attC,muC,aC);
-% plot3dim1(EelasDataObj,attC,muC,aC); 
+% plot3dim1(etaDataObj,attC,muC,aC);
+% plot3dim1(DetaDataObj,attC,muC,aC);
+% plot3dim1(EelasDataObj,attC,muC,aC);
 % plot3dim1(DEelasDataObj,attC,muC,aC);
-% plot3dim1EB(etaDataObj,etaDataE,attC,muC,aC); 
+% plot3dim1EB(etaDataObj,etaDataE,attC,muC,aC);
 % Phase diagram with interfiber forces
-%%{
+%{
 muC.name = '$\mu_{stat}$';
 plotPhase(DetaData,'$\Delta \eta/\eta_0$',attC,muC,aC,-0.05)
 %}

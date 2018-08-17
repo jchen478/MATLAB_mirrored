@@ -20,13 +20,23 @@ rps = 15;
 kb = 10;
 
 % parameter space
-shear = caseArr('case',{'rand_shear_shear','shear_shear',...
-    'shear_noshear','noshear_shear','noshear_noshear'},1);
-shear.legend = {'0: Rand SS','1: SS','2: SN',...
-    '3: NS','4: NN'};
-shearplot = caseArr('case',[0 1 2 3 4],1);
-shearplot.legend = shear.legend;
-mu = caseArr('$\mu$',[5 10 15],2);
-att = caseArr('$A_N$',[0 9 20 50],3);
+% shear = caseArr('case',{'rand_shear_shear','shear_shear',...
+%     'shear_noshear','noshear_shear','noshear_noshear'},1);
+% shear.legend = {'0: Rand SS','1: SS','2: SN',...
+%     '3: NS','4: NN'};
+% shearplot = caseArr('case',[0 1 2 3 4],1);
 
+% shear = caseArr('case',{'shear_noshear','noshear_noshear'},1);
+% shear.legend = {'2: SN','4: NN'};
+% shearplot = caseArr('case',[2 4],1);
+
+shear = caseArr('case',{'rand_shear_shear','shear_shear',...
+    'shear_noshear','noshear_shear'},1);
+shear.legend = {'0: Rand SS','1: SS','2: SN',...
+    '3: NS'};
+shearplot = caseArr('case',[0 1 2 3],1);
+
+mu = caseArr('$\mu$',[5 10 15],2);
+% att = caseArr('$A_N$',[0 9 20 30 35 50],3);
+att = caseArr('$A_N$',[0 9 20 50],3);
 

@@ -4,13 +4,13 @@ clear;
 close all;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Part 0 - definitions 
+%% Part 0 - definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 simulation_cases;
 
 basisStrain = 1000;
 
-nMu = mu.ndata; 
+nMu = mu.ndata;
 nRp = rp.ndata;
 nAtt = att.ndata;
 
@@ -33,29 +33,29 @@ sijDataB = zeros(nRp,nMu,nAtt);
 EelasDataB = zeros(nRp,nMu,nAtt);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Part I - obtain basis 
+%% Part I - obtain basis
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 r = 0;
 for i=1:nRp
     for j=1:nMu
         for k=1:nAtt
-             display(['Base - Processing rp',...
-                 num2str(rp.value(i)),...
-                 ' mu', num2str(mu.value(j)),...
-                 ' att',num2str(att.value(k))])
-             filePrefix = [dataPathBasis,shape,'_rp',...
-                 num2str(rp.value(i)),...
-                 '_basis_mu',num2str(mu.value(j)),...
-                 '_att',num2str(att.value(k)),'_'];
-             
-             %% read input and process data
-             [r, etaDataB(i,j,k)] = process_stress_lbox_eta_basis(filePrefix, basisStrain, 2, sidex, nfib.value(i), nseg, rps.value(i), kb.value(i), a, EY, Imom, eta0);
-             % number of contacts
-             NCDataB(i,j,k) = process_NC(filePrefix, basisStrain, 2, r');
-             % contact statistics
-             [NC_total_statDataB(i,j,k), NC_total_no_jointsDataB(i,j,k), overlapDataB(i,j,k),forcDataB(i,j,k),sijDataB(i,j,k)] = process_contactStat(filePrefix, basisStrain, 2, r');
-             % elastic energy statistics
-             EelasDataB(i,j,k) = process_elastic(filePrefix, basisStrain, 2, r');
+            display(['Base - Processing rp',...
+                num2str(rp.value(i)),...
+                ' mu', num2str(mu.value(j)),...
+                ' att',num2str(att.value(k))])
+            filePrefix = [dataPathBasis,shape,'_rp',...
+                num2str(rp.value(i)),...
+                '_basis_mu',num2str(mu.value(j)),...
+                '_att',num2str(att.value(k)),'_'];
+            
+            %% read input and process data
+            [r, etaDataB(i,j,k)] = process_stress_lbox_eta_basis(filePrefix, basisStrain, 2, sidex, nfib.value(i), nseg, rps.value(i), kb.value(i), a, EY, Imom, eta0);
+            % number of contacts
+            NCDataB(i,j,k) = process_NC(filePrefix, basisStrain, 2, r');
+            % contact statistics
+            [NC_total_statDataB(i,j,k), NC_total_no_jointsDataB(i,j,k), overlapDataB(i,j,k),forcDataB(i,j,k),sijDataB(i,j,k)] = process_contactStat(filePrefix, basisStrain, 2, r');
+            % elastic energy statistics
+            EelasDataB(i,j,k) = process_elastic(filePrefix, basisStrain, 2, r');
         end
     end
 end
@@ -113,13 +113,31 @@ DsijData = sijData - sijDataB;
 DEelasData = EelasData - EelasDataB;
 
 %% plots
-DetaData (DetaData == 0) = nan; 
-DNCData (DNCData == 0) = nan; 
-
+DetaData (DetaData == 0) = nan;
+DNCData (DNCData == 0) = nan;
 etaDataObj = data3D('$\eta/\eta_0$',etaData);
 DetaDataObj = data3D('$\Delta \eta/\eta_0$',DetaData);
 
-plot3dim1(etaDataObj,att,mu,rp); 
-plot3dim1(DetaDataObj,att,mu,rp);
-plot3dim1(etaDataObj,att,rp,mu); 
-plot3dim1(DetaDataObj,att,rp,mu);
+% plot3dim1(etaDataObj,att,mu,rp);
+% plot3dim1(DetaDataObj,att,mu,rp);
+% plot3dim1(etaDataObj,att,rp,mu);
+% plot3dim1(DetaDataObj,att,rp,mu);
+
+%% paper figure
+figure('Units','Inches','Position',[1 1 3.0 2.5]);
+hold on
+box on
+xlabel('$A_N$')
+ylabel('$\Delta \eta/\eta_0$')
+legendArr = cell(nRp*nMu,1);
+
+colorOrder = [ rgb('Orange'); rgb('MediumBlue'); rgb('DarkGreen')];
+
+for i=1:1
+    for j=1:nMu
+        ind = (i-1)*nMu+j;
+        plot(att.value,squeeze(DetaData(1,j,:)),'-.o','linewidth',2.0,'color',colorOrder(ind,:))
+        legendArr{ind} = ['$(r_p,\mu)=$(',num2str(rp.value(1)),',',num2str(mu.value(j)),')']; 
+    end
+end
+legend(mu.legend,'location','northoutside','orientation','horizontal')

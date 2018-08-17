@@ -10,7 +10,7 @@ close all;
 simulation_cases;
 
 basisStrain = 1000;
-rbStrain = 100;
+rbStrain = 200;
 
 nShear = shear.ndata;
 nMu = mu.ndata;
@@ -50,6 +50,7 @@ IDataRB = zeros(nMu,nAtt);
 %% Part I - obtain basis
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% sheared basis
+%%{
 r = 0;
 for j=1:nMu
     for k=1:nAtt
@@ -70,7 +71,9 @@ for j=1:nMu
         EelasDataB(j,k) = process_elastic(filePrefix, basisStrain, 2, r');
     end
 end
+%}
 %% relaxed basis
+%%{
 for j=1:nMu
     for k=1:nAtt
         display(['Relaxed Base - Processing mu',...
@@ -90,12 +93,15 @@ for j=1:nMu
         
     end
 end
-
+%}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part II - obtain redispersed value
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for i=1:nShear
     for j=1:nMu
+%         figure('Units','Inches','Position',[1 1 3.0 2.2]);
+%         hold on
+%         title([shear.legend{i}, ' $\mu = $', num2str(mu.value(j))])
         for k=1:nAtt
             display(['Processing ',...
                 shear.value{i},...
@@ -117,12 +123,17 @@ for i=1:nShear
             EelasData(i,j,k) = process_elastic(filePrefix, basisStrain, 5, r');
             
         end
+%         legend(att.legend)
+%         ylim([1 5])
+%         ylabel('$\eta/\eta_0$')
+%         xlabel('$\gamma$')
     end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part III - obtain differences
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%{
 DetaData = zeros(nShear,nMu,nAtt);
 DNCData = zeros(nShear,nMu,nAtt);
 DNC_total_statData = zeros(nShear,nMu,nAtt);
@@ -146,7 +157,7 @@ IData (IData == 0) = NaN;
 for i=1:nShear
     % determine basis depending on shear
     if (strcmp(shear.value{i},'shear_noshear') || strcmp(shear.value{i},'noshear_noshear'))
-        DetaData(i,:,:) = squeeze(etaData(i,:,:))-etaDataRB;
+%         DetaData(i,:,:) = squeeze(etaData(i,:,:))-etaDataRB;
         DNCData(i,:,:) = squeeze(NCData(i,:,:))-NCDataRB;
         DNC_total_statData(i,:,:) = squeeze(NC_total_statData(i,:,:)) - NC_total_statDataRB;
         DNC_total_no_jointsData(i,:,:) = squeeze(NC_total_no_jointsData(i,:,:)) - NC_total_no_jointsDataRB;
@@ -162,7 +173,7 @@ for i=1:nShear
         DoverlapData(i,:,:) = squeeze(overlapData(i,:,:)) - overlapDataB;
         DforcData(i,:,:) = squeeze(forcData(i,:,:)) - forcDataB;
         DsijData(i,:,:) = squeeze(sijData(i,:,:)) - sijDataB;
-        DEelasData(i,:,:) = squeeze(EelasData(i,:,:)) - EelasDataB;
+%         DEelasData(i,:,:) = squeeze(EelasData(i,:,:)) - EelasDataB;
     end
 end
 
@@ -173,7 +184,8 @@ EelasDataObj = data3D('$E_{elastic}^*$',EelasData);
 DEelasDataObj = data3D('$\Delta E_{elastic}^*$',DEelasData);
 
 %% plots
-plot3dim1(etaDataObj,att,shear,mu); 
+plot3dim1(etaDataObj,att,shear,mu);
 plot3dim1(DetaDataObj,att,shear,mu);
-% plot3dim1(EelasDataObj,att,shear,mu); 
+% plot3dim1(EelasDataObj,att,shear,mu);
 % plot3dim1(DEelasDataObj,att,shear,mu);
+%}

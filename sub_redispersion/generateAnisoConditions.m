@@ -1,6 +1,6 @@
-% clc;
-% clear;
-% close all;
+clc;
+clear;
+close all;
 
 %% input from file
 % initial box
@@ -206,14 +206,28 @@ end
 
 volfrac = 1280*150*pi./(Lx.*Ly.*Lz);
 
-% figure('Units','Inches','Position',[1 1 3.5 2.2]);
+figure('Units','Inches','Position',[1 1 5.0 2.5]);
 hold on
-plot(gamma, volfrac*100)
-% plot(gamma, volfrac*100,'color',rgb('black'))
+% plot(gamma, volfrac*100)
+plot(gamma, volfrac*100,'color',rgb('black'))
 % legend('$r_{\phi}=4$')
 xlim([0 max(gamma)])
 xlabel('$\gamma$')
 ylabel('$\phi\ \%$')
+
+x = [region3 region3];
+y = [0 max(volfrac)*100];
+line(x,y,'Color',rgb('Red'),'LineStyle','-.','linewidth',2.0)
+
+x = [gamma(end) gamma(end)+500];
+y = [min(volfrac)*100 min(volfrac)*100];
+line(x,y,'Color',rgb('black'),'LineStyle','-')
+
+xlim([0 max(gamma)+500])
+
+x = [gamma(end) gamma(end)];
+y = [0 max(volfrac)*100];
+line(x,y,'Color',rgb('Red'),'LineStyle','-.','linewidth',2.0)
 
 % figure('Units','Inches','Position',[1 1 5.0 2.5]);
 % hold on
