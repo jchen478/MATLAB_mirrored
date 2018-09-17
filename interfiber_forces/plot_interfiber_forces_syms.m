@@ -5,7 +5,7 @@ clear;
 %% Interfiber normal forces parameters
 fstar = 150; 
 fact = 20;
-Astar = [0, 9, 20, 30, 50];
+Astar = [0, 9, 20, 30, 35, 50];
 decatt = 35;
 rep_cut = 0.66; 
 overlap = 1.85; 
@@ -71,14 +71,14 @@ end
 
 %% Plotting Components
 AstarColorArr = {rgb('Crimson'), rgb('DarkOrange'), ...
-    rgb('DarkGreen'), rgb('MediumBlue'), rgb('Maroon')};
+    rgb('DarkGreen'), rgb('MediumBlue'), rgb('Purple'), rgb('Maroon')};
 
 figure('Units','Inches','Position',[1 1 4.8 3.0]);
 title('\textbf{Components of normal force}')
 box on
 hold on
 for i=1:nAstar
-    plot(h,Fatt(:,i),'color',AstarColorArr{i})
+    plot(h,Fatt(:,i),'linestyle','-','color',AstarColorArr{i})
 end
 legend(AstarLegend,'Location','best')
 ylabel('$F_{att}\ (\mu N)$')
@@ -103,7 +103,7 @@ xlabel('$h/b$')
 xlim([-0.2 h(end)])
 ylim([-inf 50])
 for i=1:nAstar
-    plot(h,Ftot(:,i),'color',AstarColorArr{i})
+    plot(h,Ftot(:,i),'linestyle','-','color',AstarColorArr{i})
 end
 legend(FtotAstarLegend,'Location','northeast')
 for i=2:nAstar
@@ -118,7 +118,7 @@ handle = axes('Parent', gcf,'Units','Inches',...
 box on 
 hold on
 for i=1:nAstar
-    plot(h,Ftot(:,i),'color',AstarColorArr{i}) 
+    plot(h,Ftot(:,i),'linestyle','-','color',AstarColorArr{i}) 
 end
 for i=2:nAstar
     plot(maxFtot(i,1),maxFtot(i,2),'o','color',AstarColorArr{i})
@@ -131,7 +131,7 @@ title('\textbf{Interfiber potential}')
 box on
 hold on
 for i=1:nAstar
-    plot(h,-Uval(:,i),'color',AstarColorArr{i})
+    plot(h,-Uval(:,i),'linestyle','-','color',AstarColorArr{i})
 end
 legend(AstarLegend,'Location','best')
 ylabel('$-U = \int F d(h/b)$')
@@ -149,7 +149,7 @@ xlabel('$h/b$')
 xlim([-0.2 h(end)])
 ylim([-inf 50])
 for i=1:nAstar
-    plot(h,Ftot(:,i),'color',AstarColorArr{i})
+    plot(h,Ftot(:,i),'linestyle','-','color',AstarColorArr{i})
 end
 legend(FtotAstarLegend,'Location','northeast')
 for i=2:nAstar
@@ -164,7 +164,7 @@ handle = axes('Parent', gcf,'Units','Inches',...
 box on 
 hold on
 for i=1:nAstar
-    plot(h,Ftot(:,i),'color',AstarColorArr{i}) 
+    plot(h,Ftot(:,i),'linestyle','-','color',AstarColorArr{i}) 
 end
 for i=2:nAstar
     plot(zeroFtot(i,1),zeroFtot(i,2),'o','color',AstarColorArr{i})
@@ -182,7 +182,7 @@ xlabel('$h/b$')
 xlim([-0.2 h(end)])
 ylim([-inf 50])
 for i=1:nAstar
-    plot(h,Ftot(:,i),'color',AstarColorArr{i})
+    plot(h,Ftot(:,i),'linestyle','-','color',AstarColorArr{i})
 end
 legend(FtotAstarLegend,'Location','northeast')
 text(1.55,1.6,'\bf{Max} \boldmath$F_{att}$','Units','Inches',...
@@ -197,7 +197,7 @@ handle = axes('Parent', gcf,'Units','Inches',...
 box on 
 hold on
 for i=1:nAstar
-    plot(h,Ftot(:,i),'color',AstarColorArr{i}) 
+    plot(h,Ftot(:,i),'linestyle','-','color',AstarColorArr{i}) 
 end
 for i=2:nAstar
     plot(zeroFtot(i,1),zeroFtot(i,2),'o','color',AstarColorArr{i})
@@ -211,9 +211,27 @@ handle = axes('Parent', gcf,'Units','Inches',...
 box on 
 hold on
 for i=1:nAstar
-    plot(h,Ftot(:,i),'color',AstarColorArr{i}) 
+    plot(h,Ftot(:,i),'linestyle','-','color',AstarColorArr{i}) 
 end
 for i=2:nAstar
     plot(maxFtot(i,1),maxFtot(i,2),'o','color',AstarColorArr{i})
 end
 set(handle, 'Xlim', [0.1 0.3], 'Ylim', [-1 15]);
+
+%%
+figure('Units','Inches','Position',[1 1 3.5 3.5]);
+hold on
+box on 
+hold on
+title('\boldmath$F_{tot} = 0$')
+for i=1:nAstar
+    plot(h,Ftot(:,i),'linestyle','-','color',AstarColorArr{i}) 
+end
+legend(FtotAstarLegend,'Location','bestoutside')
+for i=2:nAstar
+    plot(zeroFtot(i,1),zeroFtot(i,2),'o','color',AstarColorArr{i})
+end
+xlim([0.04 0.28])
+ylim([-5 5])
+ylabel('$F_{N}\ (\mu N)$')
+xlabel('$h/b$')

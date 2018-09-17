@@ -18,12 +18,19 @@ eta0 = 1;           % fluid viscosity (Pa s)
 sidex = 600; 
 
 % parameter space
-rp = caseArr('$r_p$',50:5:100,1);
-cond = caseArr('set ',{'mu5_att20','mu15_att20'},2);
-cond.legend = {'$(\mu,A_N) = (5,20)$','$(\mu,A_N) = (15,20)$'};
+% rp = caseArr('$r_p$',50:5:100,1);
+% cond = caseArr('set ',{'mu5_att0','mu5_att20','mu5_att50','mu15_att20'},2);
+% cond.legend = {'$(\mu,A_N) = (5,0)$','$(\mu,A_N) = (5,20)$','$(\mu,A_N) = (5,50)$','$(\mu,A_N) = (15,20)$'};
+% 
+% condMu = caseArr('mu',{'5','5','5','15'},3);
+% condAtt = caseArr('att',{'0','20','50','20'},3);
 
-condMu = caseArr('mu',{'5','15'},3);
-condAtt = caseArr('att',{'20','20'},3);
+rp = caseArr('$r_p$',50:5:100,1);
+cond = caseArr('set ',{'mu5_att0','mu5_att20','mu15_att20'},2);
+cond.legend = {'$(\mu,A_N) = (5,0)$','$(\mu,A_N) = (5,20)$','$(\mu,A_N) = (15,20)$'};
+
+condMu = caseArr('mu',{'5','5','15'},3);
+condAtt = caseArr('att',{'0','20','20'},3);
 
 nfib = caseArr('$N_{fib}$',[1920 1760 ...
     1600 1472 ...
@@ -38,10 +45,4 @@ kb = caseArr('$k_b$',[50.63 34.58 ...
     4.82 3.88 ...
     3.16],3);
 rps = caseArr('$r_{ps}$',10:1:20,3);
-
-
-
-
-
-
 

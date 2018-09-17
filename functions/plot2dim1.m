@@ -6,7 +6,7 @@ function [] = plot2dim1(data1, x, y)
 pdata1 = permute(data1.value,[x.dim y.dim]);
 
 %% create corresponding legend array
-figure('Units','Inches','Position',[1 1 3.0 2.5]);
+figure('Units','Inches','Position',[4 3 3.0 2.5]);
 hold on
 for j=1:length(y.value)
     plot(x.value,pdata1(:,j),'-.o')

@@ -7,7 +7,7 @@ pdata1 = permute(data1.value,[x.dim y.dim z.dim]);
 
 %% create corresponding legend array
 for k=1:length(z.value)
-    figure('Units','Inches','Position',[1 1 3.0 2.5]);
+    figure('Units','Inches','Position',[4 6 3.0 2.5]);
 %     figure('Units','Inches','Position',[1 1 3.5 3.0]);
     hold on
     set(gcf,'name',z.legend{k})

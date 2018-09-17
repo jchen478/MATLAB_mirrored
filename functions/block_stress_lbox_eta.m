@@ -1,7 +1,7 @@
 function [r, block_strain, block_etarel] = block_stress_lbox_eta( filePrefix, blockSize, ithStat,sidex, nfib, nseg, rps, kb, a, EY, Imom, eta0)
 % return block average of data with specified block size
 r = 0;
-block_strain = []; 
+block_strain = [];
 block_etarel = [];
 if (exist([filePrefix,'Stress_tensor.txt'], 'file') ~= 0)
     [stress_strain, sigxz_out] = read_stress([filePrefix,'Stress_tensor.txt']);
@@ -33,7 +33,7 @@ if (exist([filePrefix,'Stress_tensor.txt'], 'file') ~= 0)
 end
 
 %% discard regions not needed
-stress_strain (stress_strain <= r(4)) = 0; 
+stress_strain (stress_strain <= r(4)) = 0;
 ind = 0;
 for i=length(stress_strain):-1:0
     if stress_strain(i) == 0
@@ -41,9 +41,9 @@ for i=length(stress_strain):-1:0
         break;
     end
 end
-stress_strain(1:ind) = []; 
-etarel(1:ind) = []; 
-stress_strain = stress_strain - stress_strain(1); 
+stress_strain(1:ind) = [];
+etarel(1:ind) = [];
+stress_strain = stress_strain - stress_strain(1);
 
 %% read in extra files
 if (exist([filePrefix,'extra_Stress_tensor.txt'], 'file') ~= 0)
@@ -65,23 +65,17 @@ if (exist([filePrefix,'extra_Stress_tensor.txt'], 'file') ~= 0)
 end
 
 %% concatenate results with extra files
-stress_strain_extra = stress_strain_extra + stress_strain(end);
-strain_total = [stress_strain ; stress_strain_extra]; 
-etarel_total = [etarel ; etarel_extra];  
-
-nblocks = floor(length(strain_total) / blockSize); 
-block_strain = zeros(nblocks, 1);
-block_etarel = zeros(nblocks, 1);
-
-for i=1:nblocks
-    block_strain(i) = mean(strain_total((i-1)*blockSize+1:i*blockSize));
-    block_etarel(i) = mean(etarel_total((i-1)*blockSize+1:i*blockSize));
-end
-
-% figure()
-% hold on
-% plot(strain_total, etarel_total)
-% plot(block_strain, block_etarel,'-o')
+% if (exist([filePrefix,'extra_Stress_tensor.txt'], 'file') ~= 0)
+%     stress_strain_extra = stress_strain_extra + stress_strain(end);
+%     strain_total = [stress_strain ; stress_strain_extra];
+%     etarel_total = [etarel ; etarel_extra];
+% else
+    strain_total = stress_strain;
+    etarel_total = etarel;
+% end
+% 
+block_strain = block_average(strain_total, blockSize);
+block_etarel = block_average(etarel_total, blockSize);
 
 end
 

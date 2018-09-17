@@ -8,7 +8,8 @@ close all;
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 simulation_cases;
 
-basisStrain = 800;
+basisStrain = 1000;
+rbStrain = 400; 
 
 nRp = rp.ndata;
 nCond = cond.ndata;
@@ -55,15 +56,19 @@ for i=1:nRp
         % contact statistics
         [NC_total_statDataB(i,j), NC_total_no_jointsDataB(i,j), overlapDataB(i,j),forcDataB(i,j),sijDataB(i,j)] = process_contactStat(filePrefix, basisStrain, 2, r');
         % elastic energy statistics
-        EelasDataB(i,j) = process_elastic(filePrefix, basisStrain, 2, r');
-        
+        EelasDataB(i,j) = process_elastic([filePrefix,'relaxed_'], rbStrain, 2, [rbStrain 500]');
+        EelasDataB(i,j) = EelasDataB(i,j) *(rp.value(i)/75)^3;
     end
 end
 etaDataB (etaDataB == 0) = nan;
+EelasDataB (EelasDataB == 0) = nan;
+
 etaDataBObj = data3D('ND $\eta/\eta_0$',etaDataB);
+EelasDataBObj = data3D('ND $E_{elas}$',EelasDataB);
 NCDataBObj = data3D('ND $N_C$',NCDataB);
 
 plot2dim1(etaDataBObj,rp,cond); 
+plot2dim1(EelasDataBObj,rp,cond); 
 % plot2dim1EB(etaDataBObj,etaDataBE,rp,cond); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -88,7 +93,8 @@ for i=1:nRp
             % contact statistics
             [NC_total_statData(i,j), NC_total_no_jointsData(i,j), overlapData(i,j),forcData(i,j),sijData(i,j)] = process_contactStat(filePrefix, basisStrain, 5, r');
             % elastic energy statistics
-            EelasData(i,j) = process_elastic(filePrefix, basisStrain, 5, r');
+            EelasData(i,j) = process_elastic([filePrefix,'relaxed_'], rbStrain, 2, [rbStrain 500]');
+            EelasData(i,j) = EelasData(i,j) *(rp.value(i)/75)^3;
     end
 end
 
@@ -122,7 +128,10 @@ DNCData (DNCData == 0) = nan;
 
 etaDataObj = data3D('$\eta/\eta_0$',etaData);
 DetaDataObj = data3D('$\Delta \eta/\eta_0$',DetaData);
+EelasDataObj = data3D('$E_{elas}$',EelasData);
+DEelasDataObj = data3D('$\Delta E_{elas} / E_{scale}$',DEelasData);
 
 plot2dim1(etaDataObj,rp,cond); 
 plot2dim1(DetaDataObj,rp,cond); 
-
+plot2dim1(EelasDataObj,rp,cond); 
+plot2dim1(DEelasDataObj,rp,cond); 

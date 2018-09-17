@@ -26,7 +26,7 @@ if (exist([filePrefix,'ContactStat.txt'], 'file') ~= 0)
     overlap_stat = interval_average(Con_strain,overlap,r);
     forc_stat = interval_average(Con_strain,forc,r);
     sij_stat = interval_average(Con_strain,sij,r);
-    
+ 
     NC_total_statData = NC_total_stat(ithStat,1);
     NC_total_no_jointsData = NC_total_no_joints_stat(ithStat,1);
     overlapData = overlap_stat(ithStat,1);

@@ -1,9 +1,7 @@
-function [r, eta, etaE] = process_stress_lbox_eta_basis( filePrefix, basisStrain, ithStat, sidex, nfib, nseg, rps, kb, a, EY, Imom, eta0)
+function [block_strain, block_etarel] = block_stress_lbox_eta_basis( filePrefix, blockSize, ithStat, sidex, nfib, nseg, rps, kb, a, EY, Imom, eta0)
 %PROCESS_INTENSITY Find stats for intensity
-r = 0;
-
-eta = 0;
-etaE = 0;
+block_strain = 0;
+block_etarel = 0;
 if (exist([filePrefix,'Stress_tensor.txt'], 'file') ~= 0)
     
     [stress_strain, sigxz_out] = read_stress([filePrefix,'Stress_tensor.txt']);
@@ -21,18 +19,10 @@ if (exist([filePrefix,'Stress_tensor.txt'], 'file') ~= 0)
     
     % Non-dimensionalize
     sigmap_nondim = sigmap.*L.^4/EY/Imom;
-    if (stress_strain(end) <= basisStrain)
-        return
-    end
-%     if stress_strain(end) == 500
-%         r = [basisStrain 500];
-%     else
-        r = [basisStrain stress_strain(end)];
-%     end
-    %     sigmap_nondim_stat = interval_average(stress_strain,sigmap_nondim,r');
-    eta_stat = interval_average(stress_strain,etarel,r');   
-    eta = eta_stat(ithStat,1);
-    etaE = eta_stat(ithStat,2);
+  
+    block_strain = block_average(stress_strain, blockSize);
+    block_etarel = block_average(etarel, blockSize);
+    
 end
 
 end

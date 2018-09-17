@@ -7,9 +7,9 @@ close all;
 %% Part 0 - definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 simulation_cases;
-blockSize = 500;
+blockSize = 250;
 basisStrain = 1000;
-
+defaultFormat
 blockData(nMu,nAtt,nA) = strainValue();
 
 etaData = zeros(nMu,nAtt,nA);
@@ -39,27 +39,27 @@ etaDataBE = zeros(nMu,nAtt);
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 r = 0;
 for i=1:nMu
-%         figure('Units','Inches','Position',[1 1 3.0 2.5]);
-%         hold on
-%         title(['Basis: $\mu$ ',num2str(muC.value(i))])
-        for k=1:nAtt
-            display(['Processing basis mu',num2str(muArr(i)),'_att',num2str(attArr(k))]);
-            filePrefix = [dataPathBasis,shape,'_rp75_basis_mu',num2str(muArr(i)),'_att',num2str(attArr(k)),'_'];
-            %% read input and process data
-            [r, etaDataB(i,k), etaDataBE(i,k)] = process_stress_lbox_eta_basis(filePrefix, basisStrain, 2, sidex, nfib, nseg, rps, kb, a, EY, Imom, eta0);
-            % number of contacts
-            NCDataB(i,k) = process_NC(filePrefix, basisStrain, 2, r');
-            % contact statistics
-            [NC_total_statDataB(i,k), NC_total_no_jointsDataB(i,k), overlapDataB(i,k),forcDataB(i,k),sijDataB(i,k)] = process_contactStat(filePrefix, basisStrain, 2, r');
-            % elastic energy statistics
-            EelasDataB(i,k) = process_elastic(filePrefix, basisStrain, 2, r');
-        end
-%         legend(attC.legend)
-%         ylabel('$\eta/\eta_0$')
-%         set(gca,'yscale','log')
-%         xlabel('$\gamma$')
+    %         figure('Units','Inches','Position',[1 1 3.0 2.5]);
+    %         hold on
+    %         title(['Basis: $\mu$ ',num2str(muC.value(i))])
+    for k=1:nAtt
+        display(['Processing basis mu',num2str(muArr(i)),'_att',num2str(attArr(k))]);
+        filePrefix = [dataPathBasis,shape,'_rp75_basis_mu',num2str(muArr(i)),'_att',num2str(attArr(k)),'_'];
+        %% read input and process data
+        [r, etaDataB(i,k), etaDataBE(i,k)] = process_stress_lbox_eta_basis(filePrefix, basisStrain, 2, sidex, nfib, nseg, rps, kb, a, EY, Imom, eta0);
+        % number of contacts
+        NCDataB(i,k) = process_NC(filePrefix, basisStrain, 2, r');
+        % contact statistics
+        [NC_total_statDataB(i,k), NC_total_no_jointsDataB(i,k), overlapDataB(i,k),forcDataB(i,k),sijDataB(i,k)] = process_contactStat(filePrefix, basisStrain, 2, r');
+        % elastic energy statistics
+        EelasDataB(i,k) = process_elastic(filePrefix, basisStrain, 2, r');
+    end
+    %         legend(attC.legend)
+    %         ylabel('$\eta/\eta_0$')
+    %         set(gca,'yscale','log')
+    %         xlabel('$\gamma$')
 end
-
+defaultFormat
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part II - obtain redispersed value
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -98,29 +98,42 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part IV - plotting
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+close all;
+defaultFormat
 legendArr = cell(nMu*nAtt*nA,1);
-ind = 1; 
+ind = 1;
 
-
+defaultFormat
 for i=1:nMu
     figure('Units','Inches','Position',[1 1 4.5 3.0]);
     hold on
     box on
     title(muC.legend{i})
     for k=1:nAtt
-%             if blockData(i,k,j).block_ndata == 0
+        %             if blockData(i,k,j).block_ndata == 0
         for j=1:nA
-%                 continue; 
-%             end
-            plot(blockData(i,k,j).block_strain, blockData(i,k,j).block_detarel,'o')
-%             legendArr{ind} = blockData(i,k,j).name;
-%             ind = ind + 1;
+            %                 continue;
+            %             end
+            plot(blockData(i,k,j).block_strain, blockData(i,k,j).block_detarel,'-o')
+            %             legendArr{ind} = blockData(i,k,j).name;
+            %             ind = ind + 1;
         end
     end
+    line([300 300],[-0.3,0.3],'linestyle','--','color',rgb('MediumBlue'))
     legend(attC.legend,'location','best')
-    xlabel('$\gamma$')
+    xlabel('$\gamma-\gamma_4$')
     ylabel('$\Delta \eta/\eta_0$')
+    xlim([0 1000])
 end
 
+etarelAvg = zeros(nMu, nAtt, nA);
+for i=1:nMu
+    for k=1:nAtt
+        for j=1:nA
+            etarelAvg(i,k,j) = mean(blockData(i,k,j).block_detarel);
+        end
+    end
+end
 
-% legend(legendArr{1:ind-1})
+etaDataObj = data3D('$\Delta \eta/\eta_0$',etarelAvg);
+plot3dim1(etaDataObj,attC,muC,aC);

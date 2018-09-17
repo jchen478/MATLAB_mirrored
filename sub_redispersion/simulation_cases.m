@@ -22,7 +22,7 @@ volfrac = 2*pi*rps*nseg*nfib/sidex^3;
 
 % parameter space
 % aArr = [2, 3, 4, 5];
-aArr = [4];
+aArr = [2 3 4 5];
 muArr = [0, 5, 10, 15];
 attArr = [0, 9, 20, 30, 35, 50];
 
