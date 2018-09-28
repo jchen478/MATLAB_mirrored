@@ -223,7 +223,7 @@ figure('Units','Inches','Position',[1 1 3.5 3.5]);
 hold on
 box on 
 hold on
-title('\boldmath$F_{tot} = 0$')
+% title('\boldmath$F_{tot} = 0$')
 for i=1:nAstar
     plot(h,Ftot(:,i),'linestyle','-','color',AstarColorArr{i}) 
 end

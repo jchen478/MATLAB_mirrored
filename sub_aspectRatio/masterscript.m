@@ -141,7 +141,7 @@ ylabel('$\Delta \eta/\eta_0$')
 legendArr = cell(nRp*nMu,1);
 
 colorOrder = [ rgb('Orange'); rgb('MediumBlue'); rgb('DarkGreen')];
-
+defaultFormat
 for i=1:2
     figure('Units','Inches','Position',[1 1 3.0 2.5]);
     hold on

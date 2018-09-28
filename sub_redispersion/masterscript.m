@@ -47,7 +47,7 @@ NC_totBObj = data3D('ND $N_C$',NC_totB);
 NC_tot_no_jointsBObj = data3D('ND $N_C$ no joints',NC_tot_no_jointsB);
 oversBObj = data3D('ND Overlaps',oversB);
 forcBObj = data3D('ND $F^N$',forcB);
-sijBObj = data3D('ND $s_{ij}$',sijB);
+sijBObj = data3D('ND $h_{ij}$',sijB);
 NC_brokenBObj = data3D('ND Broken $N_C$',NC_tot_no_jointsB-NCB);
 
 % plot2dim1(etaBObj,attC,muC);
@@ -57,8 +57,8 @@ NC_brokenBObj = data3D('ND Broken $N_C$',NC_tot_no_jointsB-NCB);
 % plot2dim1(NC_brokenBObj,attC,muC);
 % plot2dim1(oversBObj,attC,muC);
 % plot2dim1(forcBObj,attC,muC);
-% plot2dim1(sijBObj,attC,muC);
-% scatter(Fzero(1,:),Fzero(2,:),30,'x','MarkerEdgeColor',rgb('Lime'),'linewidth',2)
+plot2dim1(sijBObj,attC,muC);
+scatter(Fzero(1,:),Fzero(2,:),60,'x','MarkerEdgeColor',rgb('DodgerBlue'),'linewidth',2)
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -98,7 +98,7 @@ NC_totRxBObj = data3D('Rx-ND $N_C$',NC_totRxB);
 NC_tot_no_jointsRxBObj = data3D('Rx-ND $N_C$ no joints',NC_tot_no_jointsRxB);
 oversRxBObj = data3D('Rx-ND Overlaps',oversRxB);
 forcRxBObj = data3D('Rx-ND $F^N$',forcRxB);
-sijRxBObj = data3D('Rx-ND $s_{ij}$',sijRxB);
+sijRxBObj = data3D('Rx-ND $h_{ij}$',sijRxB);
 NC_brokenRxBObj = data3D('Rx-ND Broken $N_C$',NC_tot_no_jointsRxB-NCRxB);
 NC_tot_no_jointsDBObj = data3D('Rx-ND - ND $N_C$ no joints',NC_tot_no_jointsDB);
 
@@ -157,7 +157,7 @@ NC_totObj = data3D('DR $N_C$',NC_tot);
 NC_tot_no_jointsObj = data3D('DR $N_C$ no joints',NC_tot_no_joints);
 oversObj = data3D('DR Overlaps',overs);
 forcObj = data3D('DR $F^N$',forc);
-sijObj = data3D('DR $s_{ij}$',sij);
+sijObj = data3D('DR $h_{ij}$',sij);
 NC_brokenObj = data3D('DR Broken $N_C$',NC_tot_no_joints-NC);
 
 % plot3dim1(etaObj,attC,muC,aC);
@@ -167,8 +167,8 @@ NC_brokenObj = data3D('DR Broken $N_C$',NC_tot_no_joints-NC);
 % plot3dim1(NC_brokenObj,attC,muC,aC);
 % plot3dim1(oversObj,attC,muC,aC);
 % plot3dim1(forcObj,attC,muC,aC);
-% plot3dim1(sijObj,attC,muC,aC);
-% scatter(Fzero(1,:),Fzero(2,:),30,'x','MarkerEdgeColor',rgb('Lime'),'linewidth',2)
+plot3dim1(sijObj,attC,muC,aC);
+scatter(Fzero(1,:),Fzero(2,:),60,'x','MarkerEdgeColor',rgb('DodgerBlue'),'linewidth',2)
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -209,7 +209,7 @@ NC_totRxObj = data3D('Rx-DR $N_C$',NC_totRx);
 NC_tot_no_jointsRxObj = data3D('Rx-DR $N_C$ no joints',NC_tot_no_jointsRx);
 oversRxObj = data3D('Rx-DR Overlaps',oversRx);
 forcRxObj = data3D('Rx-DR $F^N$',forcRx);
-sijRxObj = data3D('Rx-DR $s_{ij}$',sijRx);
+sijRxObj = data3D('Rx-DR $h_{ij}$',sijRx);
 NC_brokenRxObj = data3D('Rx-DR Broken $N_C$',NC_tot_no_jointsRx-NCRx);
 EelasRxObj = data3D('Rx-DR $E_{el}$',EelasRx);
 NC_tot_no_jointsDObj = data3D('Rx-DR - DR $N_C$ no joints',NC_tot_no_jointsD);
@@ -273,7 +273,7 @@ DNC_totObj = data3D('$\Delta N_C$',DNC_tot);
 DNC_tot_no_jointsObj = data3D('$\Delta N_C$ no joints',DNC_tot_no_joints);
 DoversObj = data3D('$\Delta$ Overlaps',Dovers);
 DforcObj = data3D('$\Delta F_N$',Dforc);
-DsijObj = data3D('$\Delta s_{ij}$',Dsij);
+DsijObj = data3D('$\Delta h_{ij}$',Dsij);
 DNC_tot_no_jointsDObj = data3D('$\Delta \delta N_C$ no joints',DNC_tot_no_jointsD);
    
 
@@ -283,7 +283,7 @@ DNC_totRxObj = data3D('$\Delta_{Rx} N_C$',DNC_totRx);
 DNC_tot_no_jointsRxObj = data3D('$\Delta_{Rx} N_C$ no joints',DNC_tot_no_jointsRx);
 DoversRxObj = data3D('$\Delta_{Rx}$ Overlaps',DoversRx);
 DforcRxObj = data3D('$\Delta_{Rx} F_N$',DforcRx);
-DsijRxObj = data3D('$\Delta_{Rx} s_{ij}$',DsijRx);
+DsijRxObj = data3D('$\Delta_{Rx} h_{ij}$',DsijRx);
 
 %%{
 % close all
@@ -293,7 +293,7 @@ plot3dim1(DetaObj,attC,muC,aC);
 % plot3dim1(DNC_tot_no_jointsObj,attC,muC,aC);
 % plot3dim1(DoversObj,attC,muC,aC);
 % plot3dim1(DforcObj,attC,muC,aC);
-% plot3dim1(DsijObj,attC,muC,aC);
+plot3dim1(DsijObj,attC,muC,aC);
 % plot3dim1(DNC_tot_no_jointsDObj,attC,muC,aC);
 
 % close all

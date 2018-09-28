@@ -31,7 +31,7 @@ colorOrder = [ rgb('Crimson'); rgb('Orange');
 %     rgb('MediumBlue'); rgb('DarkGreen'); rgb('Purple')]; 
 
 % colorOrder = [ rgb('Crimson'); rgb('MediumBlue')];
-
+% colorOrder = [ rgb('Orange'); rgb('MediumBlue'); rgb('DarkGreen')];
 set(groot,'DefaultAxesColorOrder',colorOrder, ...
     'DefaultAxesLineStyleOrder','-|--|:|-.');
 
